@@ -1,7 +1,7 @@
 """Ask the 20 questions x 3 runs and append to results/results.csv. Fresh conversation per request.
 Modes: --mode sdk (default; FabricOpenAIResponses, returns tool steps so the SQL can be captured)
        --mode mcp (published agent MCP endpoint; answer text only, SQL usually not included).
-Guards: refuses unless demo_agent_ws is on the active F2; stops at --max-requests, at --deadline-utc,
+Guards: refuses unless the agent workspace is on the active F2; stops at --max-requests, at --deadline-utc,
 when the token based CU estimate passes --cu-budget, or when results/STOP exists.
 Usage: ask.py --runs 1,2,3 [--only Q01,Q05] [--max-requests 60] [--cu-budget 60000] [--deadline-utc 2026-10-31T10:30:00Z]"""
 import argparse, csv, datetime as dt, json, re, sys, time, uuid

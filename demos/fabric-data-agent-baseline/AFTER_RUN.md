@@ -1,6 +1,6 @@
-# After-run plan (NOT SCHEDULED: waiting on Sai)
+# After-run plan (NOT SCHEDULED: waiting on approval)
 
-Nothing here runs until Sai approves a new F2 window. Open decisions for Sai: the window itself (about 7 to 10 min,
+Nothing here runs until a new F2 window is approved. Open decisions: the window itself (about 7 to 10 min,
 similar cost to the baseline), n=1 or n=3 (n=3 costs about 3x the AI CU but supports a variance statement), and
 whether cost figures or the capacity name are published.
 
@@ -11,7 +11,7 @@ whether cost figures or the capacity name are published.
 3. Keep identical:
    - the 20 questions, byte for byte and in the same order
    - no instructions and no example queries
-   - the same 7 tables and the same `agent_lh` snapshot (lineitem 5,994,514 rows; sum of l_extendedprice
+   - the same 7 tables and the same agent lakehouse snapshot (lineitem 5,994,514 rows; sum of l_extendedprice
      229300179105.02)
    - the runtime (standard), with no republish
    - `FabricOpenAIResponses` with a new conversation per question

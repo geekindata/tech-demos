@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# F2 window controls for the data agent baseline. Approved: ONE window, moved by Sai to Fri 2026-10-30 evening (t139u), max 2 h, then pause.
+# F2 window controls for the data agent baseline. Approved: ONE window, Fri 2026-10-30 evening, max 2 h, then pause.
 # Usage: f2.sh state | resume | to_f2 | back | hardstop_arm | hardstop_status | minutes
 # resume refuses unless DATE is 2026-10-30 (Oslo) and F2_WINDOW_OK=2026-10-30 is exported.
 set -uo pipefail
 A=/home/box/tools/azcli/bin/az
 D=$(cd "$(dirname "$0")/.." && pwd)
 S=$D/scripts
+[ -f $S/env.local ] && { set -a; . $S/env.local; set +a; }   # gitignored, see env.example
 F2_ARM=${F2_ARM:?set F2_ARM to the F2 capacity ARM resource path}
 WS=${AGENT_WS_ID:-$(cat $D/scripts/agent_ws_id)}
 LOG=$D/results/f2_window_log.csv
@@ -35,7 +36,7 @@ case "${1:-state}" in
   hardstop_status) p=$(cat $D/results/hardstop.pid 2>/dev/null); ps -p "$p" >/dev/null 2>&1 && echo "armed pid=$p" || echo "not running";;
   to_f2) F2=$(cap_id "${F2_NAME:?set F2_NAME to the F2 capacity name}"); log assign_f2 "$(assign $F2)"; echo "ws capacity now $(ws_cap)";;
   back)
-    TR=$(cap_id FTL64); log assign_trial "$(assign $TR) via=${2:-manual}"
+    TR=$(cap_id "${TRIAL_CAPACITY:?set TRIAL_CAPACITY to the trial capacity name}"); log assign_trial "$(assign $TR) via=${2:-manual}"
     suspend; s=$(state); echo "F2=$s agent_ws_capacity=$(ws_cap)"
     [ "${2:-}" != hardstop ] && { p=$(cat $D/results/hardstop.pid 2>/dev/null); [ -n "$p" ] && kill "$p" 2>/dev/null && log hardstop_disarmed "pid=$p"; }
     "$0" minutes;;

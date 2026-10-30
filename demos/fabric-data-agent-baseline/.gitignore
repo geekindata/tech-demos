@@ -6,3 +6,4 @@ results/hardstop.*
 results/STOP
 __pycache__/
 scripts/agent_ws_id
+scripts/env.local

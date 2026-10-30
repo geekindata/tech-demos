@@ -1,12 +1,12 @@
-"""Read only: list the mirrored dbo.table_a _delta_log of mirror_src_db through the OneLake DFS API and
+"""Read only: list the mirrored dbo.table_a _delta_log of the source SQL database through the OneLake DFS API and
 download the commit JSONs whose lastModified falls in a UTC window, into raw/delta_log/ (gitignored).
 Usage: python3 scripts/fetch_delta_log.py 2026-10-30T19:54 2026-10-30T20:54
-Path: https://onelake.dfs.fabric.microsoft.com/<workspace-id>/<sql-database-id>/Tables/dbo/table_a/_delta_log/
-Ids are looked up by REST at run time; the storage token comes from the Azure CLI and is never printed."""
+Path: https://onelake.dfs.fabric.microsoft.com/<workspace>/<item>/Tables/dbo/table_a/_delta_log/
+Workspace and SQL database names come from scripts/env.local (FABRIC_WORKSPACE, SQL_DATABASE); ids are looked up by REST at run time; the storage token comes from the Azure CLI and is never printed."""
 import sys, os, json, urllib.request, urllib.parse, email.utils, datetime as d
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import ops
 lo, hi = (d.datetime.fromisoformat(a).replace(tzinfo=d.timezone.utc) for a in sys.argv[1:3])
-W = ops.ws(); S = ops.item('SQLDatabase', 'mirror_src_db')
+W = ops.ws(); S = ops.item('SQLDatabase', ops.env('SQL_DATABASE'))
 out = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'raw', 'delta_log'); os.makedirs(out, exist_ok=True)
 H = lambda: {'Authorization': 'Bearer ' + ops.tok('https://storage.azure.com'), 'x-ms-version': '2023-11-03'}
 base = f'https://onelake.dfs.fabric.microsoft.com/{W}'; log = f'{S}/Tables/dbo/table_a/_delta_log'

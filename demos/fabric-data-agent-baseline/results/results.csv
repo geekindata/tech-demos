@@ -30,19 +30,19 @@ data_agent_baseline,sdk_no_instructions,1,warm,2026-10-30T20:58:22Z,7.71,119.5,,
 data_agent_baseline,sdk_no_instructions,1,warm,2026-10-30T20:58:30Z,8.2,82.8,,"auto: 2/2 gold values; hand: checked, exact","The region with the most customers is **MIDDLE EAST**, with **30,244 customers**.","SELECT TOP 1 r.r_name AS RegionName, COUNT(c.c_custkey) AS CustomerCount FROM dbo.region AS r JOIN dbo.nation AS n ON n.n_regionkey = r.r_regionkey JOIN dbo.customer AS c ON c.c_nationkey = n.n_nationkey GROUP BY r.r_name ORDER BY CustomerCount DESC;",yes,model=gpt-5.1; sdk FabricOpenAIResponses published; tools nl2code+execute; 2026-10-30,Q09,5801,5632,24
 data_agent_baseline,sdk_no_instructions,1,warm,2026-10-30T20:58:38Z,5.64,95.3,,"auto: 6/6 gold values; hand: checked, exact","Here are the top 3 nations by number of suppliers:
 
-1. JORDAN – 439 suppliers  
-2. SAUDI ARABIA – 427 suppliers  
-3. RUSSIA – 426 suppliers","SELECT TOP 3 n.n_name AS nation_name, COUNT(*) AS supplier_count FROM dbo.supplier AS s JOIN dbo.nation AS n ON s.s_nationkey = n.n_nationkey GROUP BY n.n_name ORDER BY supplier_count DESC;",yes,model=gpt-5.1; sdk FabricOpenAIResponses published; tools nl2code+execute; 2026-10-30,Q10,5834,5632,47
+1. JORDAN - 439 suppliers  
+2. SAUDI ARABIA - 427 suppliers  
+3. RUSSIA - 426 suppliers","SELECT TOP 3 n.n_name AS nation_name, COUNT(*) AS supplier_count FROM dbo.supplier AS s JOIN dbo.nation AS n ON s.s_nationkey = n.n_nationkey GROUP BY n.n_name ORDER BY supplier_count DESC;",yes,model=gpt-5.1; sdk FabricOpenAIResponses published; tools nl2code+execute; 2026-10-30,Q10,5834,5632,47
 data_agent_baseline,sdk_no_instructions,1,warm,2026-10-30T20:58:44Z,7.66,93.8,,"auto: 1/1 gold values; hand: 8,683,700,250.8999 rounds to gold .90","The total revenue (extended price × (1 − discount)) for orders placed from January 1 to March 31, 1994 is:
 
 **8,683,700,250.8999**",SELECT SUM(l.l_extendedprice * (1 - l.l_discount)) AS total_revenue FROM dbo.orders AS o JOIN dbo.lineitem AS l ON o.o_orderkey = l.l_orderkey WHERE o.o_orderdate BETWEEN '1994-01-01' AND '1994-03-31';,yes,model=gpt-5.1; sdk FabricOpenAIResponses published; tools nl2code+execute; 2026-10-30,Q11,5827,5632,45
 data_agent_baseline,sdk_no_instructions,1,warm,2026-10-30T20:58:51Z,11.36,139.2,,"auto: 10/10 gold values; hand: checked, exact","Here are the top 5 customers by total revenue (Σ l_extendedprice × (1 − l_discount)) across all their orders:
 
-1. Customer#000023424 — 4,582,216.7011  
-2. Customer#000044048 — 4,306,647.5692  
-3. Customer#000107737 — 4,139,891.6349  
-4. Customer#000133564 — 4,129,094.8535  
-5. Customer#000039371 — 4,093,542.9884  
+1. Customer#000023424 - 4,582,216.7011  
+2. Customer#000044048 - 4,306,647.5692  
+3. Customer#000107737 - 4,139,891.6349  
+4. Customer#000133564 - 4,129,094.8535  
+5. Customer#000039371 - 4,093,542.9884  
 
 Values are in the same currency as the underlying `l_extendedprice` field.","SELECT TOP 5 c.c_name AS customer_name, SUM(l.l_extendedprice * (1 - l.l_discount)) AS total_revenue FROM dbo.customer AS c JOIN dbo.orders AS o ON c.c_custkey = o.o_custkey JOIN dbo.lineitem AS l ON o.o_orderkey = l.l_orderkey GROUP BY c.c_name ORDER BY total_revenue DESC;",yes,model=gpt-5.1; sdk FabricOpenAIResponses published; tools nl2code+execute; 2026-10-30,Q12,5913,5632,137
 data_agent_baseline,sdk_no_instructions,1,warm,2026-10-30T20:59:03Z,6.53,78.9,,"auto: 1/1 gold values; hand: checked, exact",26.29% of line items have return flag `R`.,"SELECT ROUND( 100.0 * SUM(CASE WHEN l_returnflag = 'R' THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 2 ) AS return_percentage FROM dbo.lineitem;",yes,model=gpt-5.1; sdk FabricOpenAIResponses published; tools nl2code+execute; 2026-10-30,Q13,5790,5632,17
@@ -51,9 +51,9 @@ data_agent_baseline,sdk_no_instructions,1,warm,2026-10-30T20:59:15Z,8.53,87.6,,"
 data_agent_baseline,sdk_no_instructions,1,warm,2026-10-30T20:59:24Z,7.33,83.7,,"auto: 1/2 gold values; hand: July = month 7, 20,773 orders matches gold","In 1995, **July** had the most orders, with a total of **20,773 orders**.","SELECT TOP 1 MONTH(o_orderdate) AS order_month, COUNT(*) AS order_count FROM dbo.orders WHERE YEAR(o_orderdate) = 1995 GROUP BY MONTH(o_orderdate) ORDER BY order_count DESC, order_month;",yes,model=gpt-5.1; sdk FabricOpenAIResponses published; tools nl2code+execute; 2026-10-30,Q16,5794,5632,28
 data_agent_baseline,sdk_no_instructions,1,warm,2026-10-30T20:59:31Z,10.69,117.8,,"auto: 6/6 gold values; hand: tool input carried a ""Verified ontology join path"" block","The three part brands with the highest revenue (sum of extended price × (1 − discount)) from suppliers in the EUROPE region are:
 
-1. Brand#11 — 1,827,150,878.51  
-2. Brand#54 — 1,823,187,361.32  
-3. Brand#12 — 1,807,631,073.96","SELECT TOP 3 p.p_brand AS part_brand, SUM(l.l_extendedprice * (1 - l.l_discount)) AS revenue FROM dbo.lineitem AS l INNER JOIN dbo.supplier AS s ON l.l_suppkey = s.s_suppkey INNER JOIN dbo.nation AS n ON s.s_nationkey = n.n_nationkey INNER JOIN dbo.region AS r ON n.n_regionkey = r.r_regionkey INNER JOIN dbo.part AS p ON l.l_partkey = p.p_partkey WHERE r.r_name = 'EUROPE' GROUP BY p.p_brand ORDER BY revenue DESC;",yes,model=gpt-5.1; sdk FabricOpenAIResponses published; tools nl2code+execute; 2026-10-30,Q17,5919,5632,82
+1. Brand#11 - 1,827,150,878.51  
+2. Brand#54 - 1,823,187,361.32  
+3. Brand#12 - 1,807,631,073.96","SELECT TOP 3 p.p_brand AS part_brand, SUM(l.l_extendedprice * (1 - l.l_discount)) AS revenue FROM dbo.lineitem AS l INNER JOIN dbo.supplier AS s ON l.l_suppkey = s.s_suppkey INNER JOIN dbo.nation AS n ON s.s_nationkey = n.n_nationkey INNER JOIN dbo.region AS r ON n.n_regionkey = r.r_regionkey INNER JOIN dbo.part AS p ON l.l_partkey = p.p_partkey WHERE r.r_name = 'EUROPE' GROUP BY p.p_brand ORDER BY revenue DESC;",yes,model=gpt-5.1; sdk FabricOpenAIResponses published; tools nl2code+execute; 2026-10-30,Q17,5919,5632,82
 data_agent_baseline,sdk_no_instructions,1,warm,2026-10-30T20:59:42Z,12.02,100.4,,"auto: 4/4 gold values; hand: checked, exact","The average order values are:
 
 - **1-URGENT**: **145260.44**

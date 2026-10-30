@@ -74,5 +74,5 @@ if summ:
         ax[1].plot([(ts(m['commit_src_utc']) - t0) / 60 for m in ms], [m['lag_s'] for m in ms], '.', label=f'{r} rows/s')
     ax[1].set_xlabel('marker commit time (minutes since first workload marker)'); ax[1].set_ylabel('lag (s)')
     ax[1].set_title('Each heartbeat marker (sawtooth = changes surface in batches)'); ax[1].legend()
-    fig.suptitle('Fabric SQL database to OneLake mirroring lag, 64-CU Fabric trial (North Europe)', fontsize=11)
+    fig.suptitle('Fabric SQL database to OneLake mirroring lag, 64-CU Fabric trial', fontsize=11)
     fig.tight_layout(); fig.savefig(R / 'lag_chart.png', dpi=130); print('chart ok')

@@ -1,15 +1,15 @@
 """Build the Fabric Python notebooks for the mirroring lag test (no secrets inside).
-mirror_seed.ipynb     : create dbo.table_a, seed 1,000,000 rows, time the initial snapshot to the SQL analytics endpoint
-mirror_workload.ipynb : seeded insert/update/delete bursts at given rates with heartbeat markers, poll the endpoint, log lag
-mirror_cold.ipynb     : single markers after a long idle gap (cold probes)"""
+seed.ipynb       : create dbo.table_a, seed 1,000,000 rows, time the initial snapshot to the SQL analytics endpoint
+workload.ipynb   : seeded insert/update/delete bursts at given rates with heartbeat markers, poll the endpoint, log lag
+cold_probe.ipynb : single markers after a long idle gap (cold probes)"""
 import sys, pathlib; sys.path.insert(0, str(pathlib.Path(__file__).parent)); import nbutil
 NB = pathlib.Path(__file__).resolve().parent.parent / 'notebooks'
 
 PARAMS = '''# Parameters (overridden by the RunNotebook job)
-src_server = ""      # serverFqdn of mirror_src_db (from GET /sqlDatabases)
-src_db = ""          # databaseName of mirror_src_db
+src_server = ""      # serverFqdn of the source SQL database (from GET /sqlDatabases)
+src_db = ""          # databaseName of the source SQL database
 ep_server = ""       # SQL analytics endpoint host (GET /sqlEndpoints/{id}/connectionString)
-ep_db = "mirror_src_db"
+ep_db = ""           # SQL analytics endpoint database name (the SQL database display name)
 seed = 42
 job = "workload"
 rates = "10,100,1000"   # rows/s, run order is interleaved per repeat
@@ -228,7 +228,7 @@ for p in range(n_probes):
     save("cold.json", probes)
 save("dmvs_cold.json", replication_dmvs(src))
 '''
-nbutil.write(str(NB / 'mirror_seed.ipynb'), [PARAMS, COMMON, SEED])
-nbutil.write(str(NB / 'mirror_workload.ipynb'), [PARAMS, COMMON, WORK])
-nbutil.write(str(NB / 'mirror_cold.ipynb'), [PARAMS, COMMON, COLD])
+nbutil.write(str(NB / 'seed.ipynb'), [PARAMS, COMMON, SEED])
+nbutil.write(str(NB / 'workload.ipynb'), [PARAMS, COMMON, WORK])
+nbutil.write(str(NB / 'cold_probe.ipynb'), [PARAMS, COMMON, COLD])
 print('ok')
