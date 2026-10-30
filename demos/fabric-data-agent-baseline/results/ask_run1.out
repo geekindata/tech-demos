@@ -1,0 +1,25 @@
+log_telemetry: sempy.relationships
+log_telemetry: sempy.dependencies
+log_telemetry: sempy.fabric
+log_telemetry: sempy
+2026-10-30T20:57:22Z Q01 r1 15.7s yes cu=581.5 est_total=582 sql=y
+2026-10-30T20:57:37Z Q02 r1 9.32s yes cu=75.5 est_total=657 sql=y
+2026-10-30T20:57:47Z Q03 r1 7.3s yes cu=74.9 est_total=732 sql=y
+2026-10-30T20:57:54Z Q04 r1 8.93s yes cu=78.4 est_total=810 sql=y
+2026-10-30T20:58:03Z Q05 r1 6.81s yes cu=589.6 est_total=1400 sql=y
+2026-10-30T20:58:10Z Q06 r1 5.28s yes cu=102.6 est_total=1502 sql=y
+2026-10-30T20:58:15Z Q07 r1 7.17s yes cu=110.5 est_total=1613 sql=y
+2026-10-30T20:58:22Z Q08 r1 7.71s yes cu=119.5 est_total=1732 sql=y
+2026-10-30T20:58:30Z Q09 r1 8.2s yes cu=82.8 est_total=1815 sql=y
+2026-10-30T20:58:38Z Q10 r1 5.64s yes cu=95.3 est_total=1911 sql=y
+2026-10-30T20:58:44Z Q11 r1 7.66s yes cu=93.8 est_total=2004 sql=y
+2026-10-30T20:58:51Z Q12 r1 11.36s yes cu=139.2 est_total=2144 sql=y
+2026-10-30T20:59:03Z Q13 r1 6.53s yes cu=78.9 est_total=2222 sql=y
+2026-10-30T20:59:09Z Q14 r1 5.73s yes cu=79.8 est_total=2302 sql=y
+2026-10-30T20:59:15Z Q15 r1 8.53s yes cu=87.6 est_total=2390 sql=y
+2026-10-30T20:59:24Z Q16 r1 7.33s partial cu=83.7 est_total=2474 sql=y
+2026-10-30T20:59:31Z Q17 r1 10.69s yes cu=117.8 est_total=2591 sql=y
+2026-10-30T20:59:42Z Q18 r1 12.02s yes cu=100.4 est_total=2692 sql=y
+2026-10-30T20:59:54Z Q19 r1 7.55s yes cu=83.4 est_total=2775 sql=y
+2026-10-30T21:00:01Z Q20 r1 5.87s partial cu=100.2 est_total=2875 sql=y
+done: 20 requests, est AI CU 2875 CU-s
