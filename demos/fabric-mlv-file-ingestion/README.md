@@ -20,7 +20,7 @@ The syntax is taken from the docs above, and the expected numbers come from a lo
 | # | Capability | Where |
 |---|---|---|
 | 1 | Bronze in one statement: `USING OneLake_Files` on a folder of CSVs | `sql/01_bronze_table_a.sql` |
-| 2 | `refresh_mode = APPEND_ONLY`: a new file in the folder gets picked up on the next refresh | steps 5–6 |
+| 2 | `refresh_mode = APPEND_ONLY`: a new file in the folder gets picked up on the next refresh | steps 5-6 |
 | 3 | `schema_mode = DYNAMIC`: file_003 adds `attribute_b`, bronze gains the column, older rows get NULL | step 7 |
 | 4 | `__filepath__`: row counts reconciled to each source file | `sql/04_inspect.sql` (a, b) |
 | 5 | Silver data quality: `CONSTRAINT … ON MISMATCH DROP` removes bad rows; lineage shows dropped counts | `sql/02_silver_table_a_clean.sql` |
@@ -59,15 +59,15 @@ If the bronze cell rejects `${demo.table_a_files_path}`, replace it with the pat
 
 ```
 data/        file_001.csv (40 rows), file_002.csv (35), file_003.csv (30, + attribute_b)
-scripts/     generate_batches.py   – deterministic generator (seed 20261030)
-             validate_csvs.py      – header/row/type checks
-             expected_outputs.py   – DuckDB emulation -> expected/
-             build_notebook.py     – builds both .ipynb files
-sql/         00..06, 99 – one file per step of the full kit, every statement cites its doc page
+scripts/     generate_batches.py - deterministic generator (seed 20261030)
+             validate_csvs.py - header/row/type checks
+             expected_outputs.py - DuckDB emulation -> expected/
+             build_notebook.py - builds both .ipynb files
+sql/         00..06, 99 - one file per step of the full kit, every statement cites its doc page
 fabric/notebooks/table_a_files_notebook.txt / .ipynb
-             – self-contained quick run (new object names, see above)
+             - self-contained quick run (new object names, see above)
 fabric/notebooks/mlv_file_ingestion_demo.ipynb
-             – the full kit as %%sql (Spark SQL) cells, for Import notebook
+             - the full kit as %%sql (Spark SQL) cells, for Import notebook
 expected/    EXPECTED.md + per-step CSVs (rows per file, dropped rows, gold)
 WRITEUP.md   blog-ready write-up
 NOTES.md     technical notes and expected numbers
@@ -92,7 +92,7 @@ To regenerate locally: `python3 scripts/generate_batches.py && python3 scripts/v
 - Refresh schedules have a 5-minute minimum interval. Notebook-session `spark.conf.set` settings don't apply to scheduled refreshes.
 - Community comment, not docs: wildcards and partial file-name filters in `path` don't work.
 
-## Step-by-step run of the full kit (about 20–30 minutes)
+## Step-by-step run of the full kit (about 20-30 minutes)
 
 > Upload **one file at a time**. If you upload all three files before step 3, the CREATE ingests everything at once and the incremental story is lost.
 > The full kit uses the `demo_ws` names (`bronze.table_a`, `silver.table_a_clean`, `gold.value_by_segment`). Where those already exist, `IF NOT EXISTS` leaves them as they are; use the quick run above for a fresh set.
@@ -167,7 +167,7 @@ Gold totals stay correct no matter which refresh strategy Fabric picks. Optimal 
 
 ## Cost and cleanup
 
-**Cost:** runs on an existing Fabric capacity (an F2 is enough) or a Fabric trial. A run takes about 20–30 minutes of capacity time; there is no other billable resource. **Pause the capacity when you're done.**
+**Cost:** runs on an existing Fabric capacity (an F2 is enough) or a Fabric trial. A run takes about 20-30 minutes of capacity time; there is no other billable resource. **Pause the capacity when you're done.**
 
 **Cleanup:** keep the scratch workspace and lakehouse (repo convention). For the quick run, use the cleanup statements in the NOTE block of `table_a_files_notebook.txt`, then delete `Files/mlv_demo/table_a_files/`. For the full kit, `sql/99_cleanup.sql` drops gold, then silver, then bronze; those names match the existing `demo_ws` objects, so only run it if you mean to remove them. Delete any schedule you created (*Manage schedules* → trash icon). Don't modify the `_mlv_system` schema while the lakehouse is still in use.
 
