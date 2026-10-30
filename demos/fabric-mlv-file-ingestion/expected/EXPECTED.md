@@ -4,117 +4,114 @@ Bronze = all rows of all files uploaded so far (DYNAMIC schema = union by column
 Silver = bronze rows passing all three constraints. Gold = SUMs/COUNTs over silver.
 
 
-## After batch 01 is uploaded and the lineage is refreshed
+## After file_001.csv is uploaded and the lineage is refreshed
 
-**Bronze columns:** `order_id`, `order_date`, `customer_id`, `country`, `channel`, `product_sku`, `product_name`, `quantity`, `unit_price`, `__filepath__`
+**Bronze columns:** `id`, `segment`, `attribute_a`, `value`, `__filepath__`
 
 **Rows per file (bronze vs silver):**
 
 | file | bronze_rows | silver_rows | dropped_rows |
 |---|---|---|---|
-| orders_batch_01.csv | 40 | 38 | 2 |
+| file_001.csv | 40 | 38 | 2 |
 
 **Totals:** bronze = 40, silver = 38, dropped = 2
 
 **Rows dropped by silver constraints:**
 
-| file | order_id | quantity | unit_price | violated_constraint |
+| file | id | segment | value | violated_constraint |
 |---|---|---|---|---|
-| orders_batch_01.csv |  | 1 | 399.00 | order_id_not_null |
-| orders_batch_01.csv | ORD-10040 | -1 | 749.00 | positive_quantity |
+| file_001.csv |  | A | 25.00 | id_not_null |
+| file_001.csv | 1040 | A | -12.50 | non_negative_value |
 
-**gold.sales_by_country:**
+**gold.value_by_segment:**
 
-| country | order_lines | units | revenue_nok |
-|---|---|---|---|
-| DK | 11 | 22 | 18328.00 |
-| FI | 6 | 11 | 10339.00 |
-| NO | 9 | 15 | 6935.00 |
-| SE | 12 | 21 | 13329.00 |
+| segment | row_count | total_value |
+|---|---|---|
+| A | 13 | 657.50 |
+| B | 11 | 522.50 |
+| C | 14 | 705.00 |
 
 
-## After batch 02 is uploaded and the lineage is refreshed
+## After file_002.csv is uploaded and the lineage is refreshed
 
-**Bronze columns:** `order_id`, `order_date`, `customer_id`, `country`, `channel`, `product_sku`, `product_name`, `quantity`, `unit_price`, `__filepath__`
+**Bronze columns:** `id`, `segment`, `attribute_a`, `value`, `__filepath__`
 
 **Rows per file (bronze vs silver):**
 
 | file | bronze_rows | silver_rows | dropped_rows |
 |---|---|---|---|
-| orders_batch_01.csv | 40 | 38 | 2 |
-| orders_batch_02.csv | 35 | 32 | 3 |
+| file_001.csv | 40 | 38 | 2 |
+| file_002.csv | 35 | 32 | 3 |
 
 **Totals:** bronze = 75, silver = 70, dropped = 5
 
 **Rows dropped by silver constraints:**
 
-| file | order_id | quantity | unit_price | violated_constraint |
+| file | id | segment | value | violated_constraint |
 |---|---|---|---|---|
-| orders_batch_01.csv |  | 1 | 399.00 | order_id_not_null |
-| orders_batch_01.csv | ORD-10040 | -1 | 749.00 | positive_quantity |
-| orders_batch_02.csv |  | 3 | 149.00 | order_id_not_null |
-| orders_batch_02.csv | ORD-10133 | -2 | 299.00 | positive_quantity |
-| orders_batch_02.csv | ORD-10134 | 0 | 399.00 | positive_quantity |
+| file_001.csv |  | A | 25.00 | id_not_null |
+| file_001.csv | 1040 | A | -12.50 | non_negative_value |
+| file_002.csv |  | A | 60.00 | id_not_null |
+| file_002.csv | 2034 | X | 40.00 | known_segment |
+| file_002.csv | 2033 | A | -37.50 | non_negative_value |
 
-**gold.sales_by_country:**
+**gold.value_by_segment:**
 
-| country | order_lines | units | revenue_nok |
-|---|---|---|---|
-| DK | 19 | 36 | 34464.00 |
-| FI | 12 | 17 | 16183.00 |
-| NO | 17 | 34 | 13916.00 |
-| SE | 22 | 37 | 26713.00 |
+| segment | row_count | total_value |
+|---|---|---|
+| A | 27 | 1313.00 |
+| B | 24 | 1013.50 |
+| C | 19 | 982.50 |
 
 
-## After batch 03 is uploaded and the lineage is refreshed
+## After file_003.csv is uploaded and the lineage is refreshed
 
-**Bronze columns:** `order_id`, `order_date`, `customer_id`, `country`, `channel`, `product_sku`, `product_name`, `quantity`, `unit_price`, `discount_code`, `__filepath__`
+**Bronze columns:** `id`, `segment`, `attribute_a`, `value`, `attribute_b`, `__filepath__`
 
 **Rows per file (bronze vs silver):**
 
 | file | bronze_rows | silver_rows | dropped_rows |
 |---|---|---|---|
-| orders_batch_01.csv | 40 | 38 | 2 |
-| orders_batch_02.csv | 35 | 32 | 3 |
-| orders_batch_03.csv | 30 | 28 | 2 |
+| file_001.csv | 40 | 38 | 2 |
+| file_002.csv | 35 | 32 | 3 |
+| file_003.csv | 30 | 28 | 2 |
 
 **Totals:** bronze = 105, silver = 98, dropped = 7
 
 **Rows dropped by silver constraints:**
 
-| file | order_id | quantity | unit_price | violated_constraint |
+| file | id | segment | value | violated_constraint |
 |---|---|---|---|---|
-| orders_batch_01.csv |  | 1 | 399.00 | order_id_not_null |
-| orders_batch_01.csv | ORD-10040 | -1 | 749.00 | positive_quantity |
-| orders_batch_02.csv |  | 3 | 149.00 | order_id_not_null |
-| orders_batch_02.csv | ORD-10133 | -2 | 299.00 | positive_quantity |
-| orders_batch_02.csv | ORD-10134 | 0 | 399.00 | positive_quantity |
-| orders_batch_03.csv | ORD-10229 | 1 | -149.00 | non_negative_price |
-| orders_batch_03.csv | ORD-10230 | -4 | 299.00 | positive_quantity |
+| file_001.csv |  | A | 25.00 | id_not_null |
+| file_001.csv | 1040 | A | -12.50 | non_negative_value |
+| file_002.csv |  | A | 60.00 | id_not_null |
+| file_002.csv | 2034 | X | 40.00 | known_segment |
+| file_002.csv | 2033 | A | -37.50 | non_negative_value |
+| file_003.csv | 3029 | X | 25.00 | known_segment |
+| file_003.csv | 3030 | B | -20.00 | non_negative_value |
 
-**gold.sales_by_country:**
+**gold.value_by_segment:**
 
-| country | order_lines | units | revenue_nok |
-|---|---|---|---|
-| DK | 25 | 45 | 41705.00 |
-| FI | 19 | 29 | 27221.00 |
-| NO | 21 | 45 | 30855.00 |
-| SE | 33 | 57 | 37943.00 |
-
-**gold.discount_usage (after silver v2 adds discount_code):**
-
-| discount_code | order_lines | revenue_nok |
+| segment | row_count | total_value |
 |---|---|---|
-| (none) | 81 | 117352.00 |
-| AUTUMN10 | 5 | 10192.00 |
-| FREESHIP | 7 | 4938.00 |
-| MEMBER15 | 5 | 5242.00 |
+| A | 37 | 1619.00 |
+| B | 33 | 1642.50 |
+| C | 28 | 1369.50 |
 
-**bronze discount_code population per file** (batches 1-2 predate the column, so NULL; empty values in batch 3 are also NULL):
+**gold.value_by_attribute_b (after silver v2 adds attribute_b):**
 
-| file | rows | rows_with_code |
+| attribute_b | row_count | total_value |
 |---|---|---|
-| orders_batch_01.csv | 40 | 0 |
-| orders_batch_02.csv | 35 | 0 |
-| orders_batch_03.csv | 30 | 19 |
+| (none) | 82 | 4001.00 |
+| b1 | 8 | 399.00 |
+| b2 | 2 | 121.00 |
+| b3 | 6 | 110.00 |
+
+**bronze attribute_b population per file** (files 1-2 predate the column, so NULL; empty values in file 3 are also NULL):
+
+| file | rows | rows_with_attribute_b |
+|---|---|---|
+| file_001.csv | 40 | 0 |
+| file_002.csv | 35 | 0 |
+| file_003.csv | 30 | 17 |
 
