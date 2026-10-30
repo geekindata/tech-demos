@@ -1,0 +1,8 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/variableLibrary/definition/valueSet/1.0.0/schema.json",
+  "name": "Preprod",
+  "variableOverrides": [
+    {"name": "target_lakehouse", "value": "demo_lakehouse_preprod"},
+    {"name": "batch_size", "value": "2000"}
+  ]
+}
