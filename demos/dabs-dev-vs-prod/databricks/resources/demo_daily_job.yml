@@ -4,11 +4,11 @@ resources:
       name: demo_daily_job
       # Quartz cron: 03:00 on 1 January only, so it will not fire during a demo.
       # Note: dev mode did NOT pause an explicit UNPAUSED schedule when tested (Oct 2026).
-      # Set PAUSED here (or per target) if you do not want either copy scheduled.
+      # Shipped as PAUSED so nothing is scheduled; switch to UNPAUSED to see a live schedule.
       schedule:
         quartz_cron_expression: "0 0 3 1 1 ?"
         timezone_id: Europe/Oslo
-        pause_status: UNPAUSED
+        pause_status: PAUSED
       tasks:
         - task_key: hello
           # No cluster settings: a notebook task with no compute runs on serverless jobs compute.
