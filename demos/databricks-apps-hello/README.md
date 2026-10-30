@@ -4,6 +4,10 @@
 
 A minimal Streamlit "hello" app, `demo-app`, deployed as a Databricks App so its details page can be shown: status *Running*, app URL, compute size, the app's service principal and the source code path.
 
+## Status
+
+Deployed in an Azure Databricks Premium workspace on Oct 30, 2026. The app reached *Running*, the details page was captured, and the app was then stopped. Details in `NOTES.md`.
+
 ## What it shows
 
 - `app/app.py`: one page with a title and the app name read from `DATABRICKS_APP_NAME`.
