@@ -7,13 +7,14 @@ Each demo is self-contained under `demos/<slug>/` and states what it costs and h
 
 | Slug | Platform | Description | Date |
 |---|---|---|---|
-| _No demos on `main` yet. New demos arrive through a PR from `dev`._ | | | |
+| [fabric-mlv-file-ingestion](demos/fabric-mlv-file-ingestion/) | Microsoft Fabric | Files → bronze → silver → gold with materialized lake views (`USING OneLake_Files`, preview); not yet run in Fabric | 2026-10-30 |
+| [fabric-databricks-post51](demos/fabric-databricks-post51/) | Fabric + Azure Databricks | Scratch objects and screenshots for LinkedIn post 51, *Fabric or Databricks? How I Decide* | 2026-10-30 |
 
 ## How to use this repo
 
 1. Pick a demo from the index and open `demos/<slug>/README.md`. It lists what the demo shows, prerequisites, how to run it, and cost and cleanup.
 2. `NOTES.md` in the same folder holds technical notes and the numbers that were verified (and where, for example locally or in Fabric).
-3. Fabric items in `fabric/` are Git-synced items for that demo's workspace only. Connect a scratch workspace to the folder, or import the files.
+3. Fabric items in `fabric/` are for that demo's workspace only: either Git-synced items (connect a scratch workspace to the folder) or notebook source to paste into a Fabric notebook. Each demo's README says which.
 4. Databricks code in `databricks/` is an Asset Bundle: `databricks bundle validate -t dev` and `databricks bundle deploy -t dev`, using your own CLI profile. No host is stored in the repo.
 5. Always pause the Fabric capacity and stop or terminate Databricks compute after a run.
 

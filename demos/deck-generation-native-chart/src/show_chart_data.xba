@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Module1" script:language="StarBasic">
+Sub ShowChart
+  Dim args(0) As New com.sun.star.beans.PropertyValue
+  args(0).Name = &quot;Hidden&quot; : args(0).Value = False
+  oDoc = StarDesktop.loadComponentFromURL(&quot;file:///workspace/tech-demos/demos/deck-generation-native-chart/output/demo_deck.pptx&quot;, &quot;_blank&quot;, 0, args())
+  Wait 3000
+  oCtrl = oDoc.CurrentController
+  oPage = oDoc.DrawPages.getByIndex(1)
+  oCtrl.setCurrentPage(oPage)
+  Wait 1000
+  For i = 0 To oPage.Count - 1
+    s = oPage.getByIndex(i)
+    If s.ShapeType = &quot;com.sun.star.drawing.OLE2Shape&quot; Then oShape = s
+  Next i
+  oCtrl.select(oShape)
+  Wait 1000
+  oDisp = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+  Dim v(0) As New com.sun.star.beans.PropertyValue
+  v(0).Name = &quot;VerbID&quot; : v(0).Value = 0
+  oDisp.executeDispatch(oCtrl.Frame, &quot;.uno:ObjectMenue&quot;, &quot;&quot;, 0, v())
+  Wait 3000
+  oChart = oShape.Model
+  oCC = oChart.CurrentController
+  oDisp.executeDispatch(oCC.Frame, &quot;.uno:DiagramData&quot;, &quot;&quot;, 0, Array())
+End Sub
+</script:module>
