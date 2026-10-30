@@ -5,7 +5,7 @@
       "name": "env_label",
       "note": "Label shown in the demo",
       "type": "String",
-      "value": "dev"
+      "value": "dev2"
     },
     {
       "name": "row_limit",
