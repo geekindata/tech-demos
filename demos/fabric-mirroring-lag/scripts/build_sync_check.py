@@ -2,7 +2,8 @@
 OBJECT_ID of sys.dm_db_external_tables_log_status and sys.sp_dw_refresh_ext_table is non NULL only with the new metadata sync (preview)."""
 import sys, pathlib; sys.path.insert(0, str(pathlib.Path(__file__).parent)); import nbutil
 P = '''ep_server = ""
-ep_db = "source_db"
+ep_db = ""
+files_root = ""   # abfss://<workspace>@onelake.dfs.fabric.microsoft.com/<lakehouse>.Lakehouse/Files
 '''
 C = '''import json, struct, traceback, pyodbc, notebookutils
 out = {}
@@ -18,7 +19,7 @@ try:
 except Exception:
     out["err"] = traceback.format_exc()[-1500:]
 txt = json.dumps(out, indent=1, default=str)
-notebookutils.fs.put("abfss://<workspace>@onelake.dfs.fabric.microsoft.com/<lakehouse>.Lakehouse/Files/mirror_lag/sync_check/sync_check.json", txt, True)
+notebookutils.fs.put(files_root + "/mirror_lag/sync_check/sync_check.json", txt, True)
 print(txt)
 '''
 nbutil.write(str(pathlib.Path(__file__).parent.parent / 'notebooks' / 'sync_check.ipynb'), [P, C])

@@ -1,13 +1,14 @@
-"""Run each gold_sql (T-SQL) on the agent_lakehouse SQL endpoint and compare with the DuckDB gold_answer in questions.csv."""
+"""Run each gold_sql (T-SQL) on the SQL analytics endpoint of the agent lakehouse and compare with the DuckDB gold_answer in questions.csv."""
 import csv, os, sys, time, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 os.environ.setdefault('AZ_BIN', '/home/box/tools/azcli/bin/az')
 import fab, tsql
+from envcfg import env
 here = pathlib.Path(__file__).resolve().parent.parent
-ws = open(here / 'scripts/agent_ws_id').read().strip()
-lh = [i for i in fab.call('GET', f'/workspaces/{ws}/lakehouses')[1]['value'] if i['displayName'] == 'agent_lakehouse'][0]
+ws = env('AGENT_WS_ID'); LH = env('AGENT_LAKEHOUSE')
+lh = [i for i in fab.call('GET', f'/workspaces/{ws}/lakehouses')[1]['value'] if i['displayName'] == LH][0]
 server = lh['properties']['sqlEndpointProperties']['connectionString']
-c = tsql.connect(server, 'agent_lakehouse'); cur = c.cursor()
+c = tsql.connect(server, LH); cur = c.cursor()
 def fmt(rows, cols):
     if len(rows) == 1 and len(cols) == 1: return str(rows[0][0])
     return '; '.join(', '.join(f'{k}={v}' for k, v in zip(cols, r)) for r in rows)
