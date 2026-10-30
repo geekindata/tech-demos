@@ -1,0 +1,8 @@
+data/
+raw/
+.venv/
+results/.resumed_once
+results/hardstop.*
+results/STOP
+__pycache__/
+scripts/agent_ws_id
