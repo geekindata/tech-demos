@@ -1,6 +1,6 @@
 # Fabric demo: file data ingestion with Materialized Lake Views (Preview)
 
-**Platform:** Microsoft Fabric (lakehouse, Spark SQL) · **Date:** 30 Oct 2026 · **Status:** see *Tested* below
+**Platform:** Microsoft Fabric (lakehouse, Spark SQL) · **Date:** 30 Oct 2026 · **Status:** preview kit; see the "Tested in" line below
 
 A ready-to-run kit that builds a full **files → bronze → silver → gold** medallion in a Fabric lakehouse
 using only Spark SQL materialized lake views (MLVs). No pipeline, no Copy job, no notebook loader for bronze.

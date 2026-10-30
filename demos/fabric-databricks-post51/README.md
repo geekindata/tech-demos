@@ -1,6 +1,6 @@
 # fabric-databricks-post51
 
-**Platform:** Microsoft Fabric + Azure Databricks (Premium) · **Date:** 30 Oct 2026 · **Related post:** LinkedIn post 51, *Fabric or Databricks? How I Decide*
+**Platform:** Microsoft Fabric + Azure Databricks (Premium) · **Date:** 30 Oct 2026 · **Related post:** blog post 51, *Fabric or Databricks? How I Decide*
 
 Scratch objects created to take the screenshots for post 51. The post compares how the two platforms handle Git, workspace items, gold tables, security, compute governance and ML tracking. This folder records what exists, so the shots can be re-taken.
 
