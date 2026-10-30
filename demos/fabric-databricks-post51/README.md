@@ -29,7 +29,7 @@ Also shown: workspace Git integration settings, capacity settings with assigned 
 
 ### Databricks Free Edition
 
-In a Databricks Free Edition workspace, `workspace.demo_schema` with `dim_table` and `gold_table`, the notebook `demo_gold_notebook` (`databricks/src/demo_gold_notebook.py`) and a `bundle-examples` Git folder were created for shots 03b, 07a and 09a. They were removed afterwards to keep that workspace clean. Re-create them with the bundle (`demo_gold_job` seeds `dim_table`, then writes `gold_table`) if needed (Azure Databricks `demo-dbx` is the preferred place for new Databricks demos).
+In a Databricks Free Edition workspace, `workspace.demo_schema` with `dim_table` and `gold_table`, the notebook `demo_gold_notebook` (`databricks/src/demo_gold_notebook.py`) and a `bundle-examples` Git folder were created for shots 03b, 07a and 09a. They were removed afterwards to keep that workspace clean. Re-create them with the bundle (`demo_gold_job` seeds `dim_table`, then writes `gold_table`) if needed (Azure Databricks `demo-dbx2` is now the preferred place for new Databricks demos; the post 51 objects above stay in `demo-dbx`).
 
 ## Prerequisites
 

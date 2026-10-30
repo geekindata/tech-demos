@@ -8,7 +8,7 @@ One Databricks Asset Bundle with one job, `demo_daily_job`, deployed to two targ
 
 Deployed to both targets in an Azure Databricks Premium workspace on Oct 30, 2026, with prod running as the deploying user. Serverless compute for workflows was off in that workspace, so the deploy needed `existing_cluster_id` on the task. Both jobs were paused after the shot. Since `b41c3c5` the repo YAML ships `pause_status: PAUSED`.
 
-The prod `run_as` service principal and the `permissions` block were added afterwards (YAML parsed locally). Not yet redeployed: Tested in Azure Databricks on <date>. Details in `NOTES.md`.
+The prod `run_as` service principal and the `permissions` block were added afterwards. Tested in Azure Databricks workspace demo-dbx2 on Oct 30, 2026: dev and prod validated and deployed, prod runs as the service principal `agent-sp`, one dev run and one prod run succeeded, and both schedules stayed PAUSED. Details in `NOTES.md`.
 
 ## What it shows
 
@@ -32,6 +32,8 @@ targets:
         user_name: ${workspace.current_user.userName}   # the deploying user
       - level: CAN_VIEW
         group_name: analysts
+      - level: CAN_RUN
+        group_name: demo_runners
     run_as:
       service_principal_name: ${var.prod_sp_app_id}     # passed at deploy time
 ```
@@ -48,7 +50,8 @@ targets:
 - For prod:
   - A service principal in the workspace, and its **application ID**.
   - **The deployer needs the Service Principal User role on that service principal** (account console or workspace admin settings: Service principals > the SP > Permissions > grant `Service principal: User`). Without it, the prod deploy fails because you can't set another identity as the job's run_as.
-  - A group named `analysts` in the workspace (or change `group_name`). An unknown group fails the deploy.
+  - Groups named `analysts` and `demo_runners` in the workspace (or change `group_name`). An unknown group fails the deploy. In an identity-federated workspace, create them as **account** groups and assign them to the workspace; a workspace-local group works for job permissions but not for Unity Catalog grants or `is_account_group_member`.
+  - The service principal must be assigned to the workspace **and** have the `Workspace access` entitlement. Without the entitlement, the prod run fails with "does not have access to Databricks Workspace".
   - For runs (not for deploy): the service principal needs CAN ATTACH TO / CAN RESTART on the cluster if you use `existing_cluster_id`, and the grants in `sql/grants_run_sp.sql` for any data it touches.
 
 ## How to run (local CLI)
@@ -93,7 +96,7 @@ databricks jobs get <job_id> --output json | grep run_as
 databricks jobs get-permissions <job_id> --output json
 ```
 
-Expected: `validate` prints the bundle summary with no errors, `deploy` ends with `Deployment complete!`, `jobs get` shows `run_as` with the application ID, and `get-permissions` lists you (CAN_MANAGE) and `analysts` (CAN_VIEW), plus admins. In the UI, Jobs > `demo_daily_job` shows **Run as** = the service principal, and **Permissions** lists you (Can Manage) and `analysts` (Can View).
+Expected: `validate` prints the bundle summary with no errors, `deploy` ends with `Deployment complete!`, `jobs get` shows `run_as` with the application ID, and `get-permissions` lists you (IS_OWNER), `analysts` (CAN_VIEW) and `demo_runners` (CAN_MANAGE_RUN), plus admins. In the UI, Jobs > `demo_daily_job` shows **Run as** = the service principal, and **Permissions** lists you, `analysts` (Can View) and `demo_runners` (Can Manage Run).
 
 A `%sh` notebook cell runs on the same driver, but it does not get the web terminal's CLI sign-in, so use the web terminal for bundle commands.
 
@@ -103,7 +106,10 @@ A `%sh` notebook cell runs on the same driver, but it does not get the web termi
 |---|---|
 | `no value assigned to required variable prod_sp_app_id` | Pass `--var="prod_sp_app_id=<application id>"` or export `BUNDLE_VAR_prod_sp_app_id`. |
 | Deploy fails on `run_as` / permission denied for the service principal | Grant the deployer the Service Principal User role on that SP. |
-| Deploy fails on `group_name: analysts` | Create the group or change `group_name`. |
+| Deploy fails on `group_name: analysts` or `demo_runners` | Create the group or change `group_name`. |
+| `level: CAN_MANAGE_RUN` rejected at target level | Bundle `permissions` accept CAN_VIEW, CAN_RUN and CAN_MANAGE only. Use `CAN_RUN`; on a job it becomes CAN_MANAGE_RUN. |
+| Prod run fails: "does not have access to Databricks Workspace" | Give the service principal the `Workspace access` entitlement (admin settings > Identity and access > Service principals). |
+| Validate warns that `/Workspace/Shared` is writable by all users | Expected for the shared prod root path in this demo. For real use, pick a root path only the deployers can write. |
 | "Serverless compute for workflows is not enabled" | Add `existing_cluster_id` (step 3 above). |
 | Pause button greyed out in the UI | Bundle-managed job: change `pause_status` in the YAML and redeploy. |
 
@@ -118,7 +124,7 @@ A `%sh` notebook cell runs on the same driver, but it does not get the web termi
 ## Limitations
 
 - `permissions` at target level apply to every resource in the bundle and to the deployed workspace files, not only to this job.
-- The audit for p50-02 shows groups on CAN_VIEW and CAN_RUN; this bundle sets CAN_VIEW for `analysts` only. For a run-only group add `- level: CAN_MANAGE_RUN` with a `group_name` (jobs call the "Can Run" UI level CAN_MANAGE_RUN).
+- The audit for p50-02 shows groups on CAN_VIEW and CAN_RUN: `analysts` has CAN_VIEW and `demo_runners` has CAN_RUN. In the bundle the level is written `CAN_RUN`; the job shows it as CAN_MANAGE_RUN ("Can Manage Run" in the UI).
 - The job's notebook reads no data, so the run works without the catalog grants; they are there for the post's "own catalog only" point.
 
 ## Files

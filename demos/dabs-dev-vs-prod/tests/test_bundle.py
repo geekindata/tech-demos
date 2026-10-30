@@ -24,7 +24,8 @@ def test_prod_run_as_and_permissions():
     prod = cfg["targets"]["prod"]
     assert prod["run_as"] == {"service_principal_name": "${var.prod_sp_app_id}"}
     perms = {(p["level"], p.get("user_name") or p.get("group_name")) for p in prod["permissions"]}
-    assert perms == {("CAN_MANAGE", "${workspace.current_user.userName}"), ("CAN_VIEW", "analysts")}
+    assert perms == {("CAN_MANAGE", "${workspace.current_user.userName}"), ("CAN_VIEW", "analysts"),
+                     ("CAN_RUN", "demo_runners")}
 
 
 def test_schedule_ships_paused():
