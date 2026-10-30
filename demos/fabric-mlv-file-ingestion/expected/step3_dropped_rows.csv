@@ -1,8 +1,8 @@
-file,order_id,quantity,unit_price,violated_constraint
-orders_batch_01.csv,,1,399.00,order_id_not_null
-orders_batch_01.csv,ORD-10040,-1,749.00,positive_quantity
-orders_batch_02.csv,,3,149.00,order_id_not_null
-orders_batch_02.csv,ORD-10133,-2,299.00,positive_quantity
-orders_batch_02.csv,ORD-10134,0,399.00,positive_quantity
-orders_batch_03.csv,ORD-10229,1,-149.00,non_negative_price
-orders_batch_03.csv,ORD-10230,-4,299.00,positive_quantity
+file,id,segment,value,violated_constraint
+file_001.csv,,A,25.00,id_not_null
+file_001.csv,1040,A,-12.50,non_negative_value
+file_002.csv,,A,60.00,id_not_null
+file_002.csv,2034,X,40.00,known_segment
+file_002.csv,2033,A,-37.50,non_negative_value
+file_003.csv,3029,X,25.00,known_segment
+file_003.csv,3030,B,-20.00,non_negative_value

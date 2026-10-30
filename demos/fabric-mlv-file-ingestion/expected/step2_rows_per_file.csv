@@ -1,3 +1,3 @@
 file,bronze_rows,silver_rows,dropped_rows
-orders_batch_01.csv,40,38,2
-orders_batch_02.csv,35,32,3
+file_001.csv,40,38,2
+file_002.csv,35,32,3
