@@ -18,3 +18,17 @@ venv/
 *.zip
 raw/
 **/raw/
+
+# Data and binary artefacts
+*.parquet
+*.delta
+*.pbix
+*.mp4
+
+# OS and editor files
+.DS_Store
+.vscode/
+.idea/
+
+# LibreOffice lock files
+.~lock.*#
