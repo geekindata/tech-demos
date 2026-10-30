@@ -7,8 +7,8 @@ Scope: as cheap as possible, so each of the 20 questions was asked once (round 1
 With one run per question there is no run-to-run variance in this baseline.
 
 Setup: a lakehouse with 7 TPC-H-style tables, the data agent, no instructions, no example
-queries, all 7 tables selected, published. Asked through the published agent with the Fabric data agent Python
-SDK (`FabricOpenAIResponses`), a fresh conversation per question. Gold answers computed independently with DuckDB
+queries, all 7 tables selected, published. Asked through the published agent from a Python script (`scripts/ask.py`, not a
+notebook) using the Fabric data agent Python SDK (`FabricOpenAIResponses`), a fresh conversation per question. Gold answers computed independently with DuckDB
 on the same Delta snapshot.
 
 ## Results
@@ -43,13 +43,14 @@ Notes on scoring (hand checked):
 In 8 of the 9 questions where the agent's SQL joined tables (Q03, Q09, Q10, Q11, Q12, Q15, Q17, Q18; not Q19), the
 agent's trace shows it handing its SQL step an explicit list of join keys, labelled "Verified ontology join path".
 No ontology was attached to this agent, and Microsoft's docs don't describe this step, so we're only reporting what
-the trace shows. No `plan_ontology_traversal` call appears in any trace. We'll check whether it's still there after
-the Nov 2 to 10 update.
+the trace shows. No `plan_ontology_traversal` call appears in any trace. A re-run after the Nov 2 to 10 update is planned but
+not scheduled; if it goes ahead, it will check whether this block is still there.
 
 ## Question style and data (disclosure)
 - The questions use the schema's own vocabulary. Q11, Q12, Q17 and Q18 give the revenue formula ("extended price
-  times one minus discount"). Q04 (ship mode AIR), Q05 (BUILDING market segment) and Q13 (return flag R) use literal
-  column values. Q05, Q13, Q14, Q15 and Q18 specify rounding.
+  times one minus discount"). Five questions use literal
+  column values: Q04 (ship mode AIR), Q05 (BUILDING market segment), Q13 (return flag R), Q17 (EUROPE region) and
+  Q18 (order priorities 1-URGENT and 5-LOW). Q05, Q13, Q14, Q15 and Q18 specify rounding.
 - Only Q19 and Q20 are phrased the way a business user would ask, and both are deliberately ambiguous, with us
   choosing the primary reading.
 - The data is synthetic and TPC-H-derived, made by a seeded generator. It is not official TPC-H SF1 (no dbgen).
@@ -63,7 +64,8 @@ LlmPlugin, operation "AI query") follows in an update, on Sun Nov 1 or later bec
 figure is given until then.
 
 Cleanup: the F2 was paused right after the run and confirmed Paused, and the workspace went back to the trial
-capacity. The agent and lakehouse are kept for the after-run (see `AFTER_RUN.md`).
+capacity. The agent and lakehouse are kept for a possible re-run after the update, which is
+planned but not scheduled and needs a new approved F2 window (see `AFTER_RUN.md`).
 
 ## Wording for posts
 - Label: "Measured on a paid F2, Oct 30, 2026, n=1 run per question." No variance or consistency claims.

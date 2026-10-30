@@ -1,10 +1,11 @@
-# After-run plan (NOT SCHEDULED: waiting on approval)
+# After-run plan (planned, not scheduled)
 
-Nothing here runs until a new F2 window is approved. Open decisions: the window itself (about 7 to 10 min,
+This re-run is planned but not scheduled: there is no date, and nothing here runs until a new F2 window is
+approved. Open decisions: the window itself (about 7 to 10 min,
 similar cost to the baseline), n=1 or n=3 (n=3 costs about 3x the AI CU but supports a variance statement), and
 whether cost figures or the capacity name are published.
 
-1. Gate: run only after Nov 10, 2026, and only if the response model string is no longer gpt-5.1 or the trace shows
+1. Gate: if approved, run no earlier than Nov 10, 2026, and only if the response model string is no longer gpt-5.1 or the trace shows
    the new advanced NL2SQL steps. Otherwise the rollout hasn't reached the tenant yet.
 2. Framing: "standard runtime before vs after the Nov 2 to 10 update". The model and the SQL tool change together,
    so this is not a model-only comparison. With 19/20 already, don't frame it as "watch it get better".
