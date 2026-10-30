@@ -1,0 +1,14 @@
+{
+ "dmv_log_status": 1557580587,
+ "sp_refresh": -1026908681,
+ "utc": "2026-10-30 21:17:54.271721",
+ "dmv_cols": [
+  "object_id",
+  "latest_log_version",
+  "latest_checkpoint_version",
+  "latest_checksum_version",
+  "last_update_time_utc",
+  "is_blocked"
+ ],
+ "dmv_rows": []
+}
