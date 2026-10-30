@@ -2,6 +2,9 @@
 table sales
 
 	measure 'Total Amount' = SUM(sales[Amount])
+		formatString: #,0.0
+
+	measure 'Avg Amount' = AVERAGE(sales[Amount])
 		formatString: #,0
 
 	column Region
