@@ -15,6 +15,11 @@ variables:
   schema:
     description: Schema the notebook reports on
     default: demo_schema
+  prod_sp_app_id:
+    # No default on purpose: the application ID is never committed. Pass it at deploy time:
+    #   databricks bundle deploy -t prod --var="prod_sp_app_id=<application id>"
+    # or export BUNDLE_VAR_prod_sp_app_id=<application id> first.
+    description: Application (client) ID of the service principal the prod job runs as
 
 targets:
   dev:
@@ -22,14 +27,23 @@ targets:
     # every schedule and trigger, so a dev deploy never runs on its own.
     mode: development
     default: true
+    variables:
+      # dev runs as the deploying user; this value is never used in dev.
+      prod_sp_app_id: not-used-in-dev
 
   prod:
     # Production mode keeps names and schedules exactly as configured.
     mode: production
     workspace:
       root_path: /Workspace/Shared/.bundle/demo/${bundle.name}/${bundle.target}
+    # Job permissions (who can see or manage the job). These are not data grants:
+    # the run identity's catalog grants live in Unity Catalog (see sql/grants_run_sp.sql).
     permissions:
       - level: CAN_MANAGE
         user_name: ${workspace.current_user.userName}
+      - level: CAN_VIEW
+        group_name: analysts
+    # Deploy identity (whoever runs `bundle deploy`) is separate from the run identity.
+    # The deployer needs the Service Principal User role on this service principal.
     run_as:
-      user_name: ${workspace.current_user.userName}
+      service_principal_name: ${var.prod_sp_app_id}
