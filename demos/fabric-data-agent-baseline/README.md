@@ -1,12 +1,12 @@
 # Fabric data agent baseline (before the Nov 2 to 10 NL2SQL/DAX update)
 
-Measured on Sai's F2, Oct 30, 2026, n=1 run per question.
+Measured on a paid F2, Oct 30, 2026, n=1 run per question.
 
-Run: Fri 2026-10-30, 21:57 to 22:00 Oslo (UTC+1), in one short paid window on an F2 in North Europe.
+Run: Fri 2026-10-30, 21:57 to 22:00 Oslo (UTC+1), in one short paid window on an F2.
 Scope: as cheap as possible, so each of the 20 questions was asked once (round 1 only, no pilot, no rounds 2 and 3).
 With one run per question there is no run-to-run variance in this baseline.
 
-Setup: lakehouse `agent_lh` with 7 TPC-H-style tables, agent `demo_data_agent`, no instructions, no example
+Setup: a lakehouse with 7 TPC-H-style tables, the data agent, no instructions, no example
 queries, all 7 tables selected, published. Asked through the published agent with the Fabric data agent Python
 SDK (`FabricOpenAIResponses`), a fresh conversation per question. Gold answers computed independently with DuckDB
 on the same Delta snapshot.
@@ -66,7 +66,7 @@ Cleanup: the F2 was paused right after the run and confirmed Paused, and the wor
 capacity. The agent and lakehouse are kept for the after-run (see `AFTER_RUN.md`).
 
 ## Wording for posts
-- Label: "Measured on Sai's F2, Oct 30, 2026, n=1 run per question." No variance or consistency claims.
+- Label: "Measured on a paid F2, Oct 30, 2026, n=1 run per question." No variance or consistency claims.
 - Accuracy: "19 of 20 correct, 1 answered a different reasonable reading". Not "95%".
 - Model: "The API responses reported model gpt-5.1." Don't attribute the model to Microsoft docs; Learn doesn't
   name it.
@@ -88,10 +88,11 @@ capacity. The agent and lakehouse are kept for the after-run (see `AFTER_RUN.md`
 
 ## Running the scripts
 The scripts were written for one scratch environment. They take the Azure CLI token at runtime and never print it.
-Set these locally (none of them are in the repo): `AGENT_WS_ID` (or a gitignored `scripts/agent_ws_id` file) for the
-workspace, `METRICS_MODEL_ID` for the Capacity Metrics semantic model, and `F2_NAME` and `F2_ARM` for the capacity
-used by `scripts/f2.sh`. The Azure CLI path is set at the top of each script.
+Copy `scripts/env.example` to `scripts/env.local` (gitignored) and fill it in; none of the values are in the repo.
+It holds `AGENT_WS_ID` for the workspace, `DATA_AGENT_NAME` and `AGENT_LAKEHOUSE` for the item names,
+`METRICS_MODEL_ID` for the Capacity Metrics semantic model, and `TRIAL_CAPACITY`, `F2_NAME` and `F2_ARM` for the
+capacities used by `scripts/f2.sh`. The Azure CLI path is set at the top of each script.
 
-Files: `results/results.csv` (generated_sql = final SQL only, IDs scrubbed), `results/f2_window_log.csv`,
+Files: `results/results.csv` (generated_sql = final SQL only, IDs scrubbed; dashes in agent answers normalised to hyphens), `results/f2_window_log.csv`,
 `results/ask_run1.out`, `questions.csv`, `gold_alternatives.csv`, `METHOD.md`, `AFTER_RUN.md`, `run_baseline.md`
 (the runbook as planned), `scripts/`. Raw JSON stays local in `raw/` (gitignored).

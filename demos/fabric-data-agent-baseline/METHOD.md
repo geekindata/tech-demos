@@ -1,6 +1,6 @@
 # Data agent baseline: method
 
-Status: run on Fri Oct 30, 2026, in one F2 window approved by Sai, then paused.
+Status: run on Fri Oct 30, 2026, in one approved F2 window, then paused.
 
 Method (Fabric Expert, Oct 30):
 - 20 fixed questions over one lakehouse, each with a known-correct SQL answer (gold computed with DuckDB on the

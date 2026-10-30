@@ -1,16 +1,17 @@
 """Shared bits: ids, guard that the agent workspace is on the ACTIVE F2, SDK credential setup (Azure CLI, tokens never printed)."""
 import os, sys, subprocess, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent)); import fab
+from envcfg import env
 os.environ['PATH'] = '/home/box/tools/azcli/bin:' + os.environ['PATH']   # AzureCliCredential needs az on PATH
 D = pathlib.Path(__file__).resolve().parent.parent
-WS = os.environ.get('AGENT_WS_ID') or (D / 'scripts/agent_ws_id').read_text().strip()   # local only, gitignored
-AGENT, LH = 'demo_data_agent', 'agent_lh'
+WS = env('AGENT_WS_ID')   # scripts/env.local, gitignored
+AGENT, LH = env('DATA_AGENT_NAME'), env('AGENT_LAKEHOUSE')
 TABLES = ['region', 'nation', 'supplier', 'customer', 'part', 'orders', 'lineitem']
 def f2_guard():
     caps = {c['id']: c for c in fab.call('GET', '/capacities')[1]['value']}
     cap = caps.get(fab.call('GET', f'/workspaces/{WS}')[1].get('capacityId'), {})
     if cap.get('sku') != 'F2' or cap.get('state') != 'Active':
-        sys.exit(f"REFUSED: demo_agent_ws is on {cap.get('sku')} ({cap.get('state')}); data agents need the active F2")
+        sys.exit(f"REFUSED: the agent workspace is on {cap.get('sku')} ({cap.get('state')}); data agents need the active F2")
     return cap['id']
 def sdk_credential():
     from azure.identity import AzureCliCredential

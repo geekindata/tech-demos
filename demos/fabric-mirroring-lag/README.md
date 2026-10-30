@@ -6,22 +6,22 @@ How long does a change committed in a Fabric SQL database take to become queryab
 
 | Item | Value |
 |---|---|
-| Capacity | Fabric trial, SKU FTL64 (64 CU), region North Europe, id `<capacity-id>` |
-| Workspace | demo_mirror_ws (`<workspace-id>`) |
-| Source | Fabric SQL database mirror_src_db (`<sql-database-id>`), collation SQL_Latin1_General_CP1_CI_AS |
+| Capacity | Fabric trial (64 CU), id `<capacity-id>` |
+| Workspace | trial workspace (`<workspace-id>`) |
+| Source | source database, a Fabric SQL database (`<sql-database-id>`), collation SQL_Latin1_General_CP1_CI_AS |
 | Source engine | Microsoft SQL Azure (RTM) 12.0.2000.8, build Sep 17 2026 |
-| Target | SQL analytics endpoint mirror_src_db (`<sql-endpoint-id>`) over the OneLake Delta mirror |
+| Target | SQL analytics endpoint of the source database (`<sql-endpoint-id>`) over the OneLake Delta mirror |
 | Endpoint engine | Microsoft Azure SQL Data Warehouse (RTM) 12.0.2000.8, build Oct 20 2026 |
 | Driver host | Fabric Python notebook (non Spark), Python 3.11.15, pyodbc with ODBC Driver 18 for SQL Server, Entra token from notebookutils |
-| Helper lakehouse | mirror_lab_lh (run logs in Files/mirror_lag/) |
-| Notebooks | mirror_seed, mirror_workload, mirror_probe (connectivity check) |
+| Helper lakehouse | helper lakehouse (run logs in Files/mirror_lag/) |
+| Notebooks | seed, workload, connectivity probe (notebooks/seed.ipynb, workload.ipynb, probe_conn.ipynb) |
 | Cost | Trial capacity only. No Azure resources, no tenant changes, zero spend |
 
 ## Method
 
 1. Table: dbo.table_a (id bigint PK, segment char(1), attribute_a varchar(12), value decimal(18,2), updated_at datetime2(6)).
-2. Seed (notebook mirror_seed, seed 42): 1,000,000 deterministic rows from GENERATE_SERIES in 4 batches of 250k. Then poll the endpoint COUNT(*) every 5 s to time the initial snapshot.
-3. Workload (notebook mirror_workload, seed 42): 9 runs, interleaved 10, 100, 1000, 10, 100, 1000, 10, 100, 1000 rows/s. Each run is a 150 s burst, one transaction per 1 s tick, mix 40% insert, 40% update (random contiguous range in ids 1 to 500000), 20% delete (walking down from the top of ids 500001 to 1000000). 60 s idle between runs.
+2. Seed (seed notebook, notebooks/seed.ipynb, seed 42): 1,000,000 deterministic rows from GENERATE_SERIES in 4 batches of 250k. Then poll the endpoint COUNT(*) every 5 s to time the initial snapshot.
+3. Workload (workload notebook, notebooks/workload.ipynb, seed 42): 9 runs, interleaved 10, 100, 1000, 10, 100, 1000, 10, 100, 1000 rows/s. Each run is a 150 s burst, one transaction per 1 s tick, mix 40% insert, 40% update (random contiguous range in ids 1 to 500000), 20% delete (walking down from the top of ids 500001 to 1000000). 60 s idle between runs.
 4. Lag probe: every 10 s plus once at the end of each burst, insert a marker row (id 9000000000 and up, segment 'M', updated_at = SYSUTCDATETIME() on the source). A second thread polls the endpoint every 2 s for new marker ids; each poll has a unique predicate so it is never served from a result cache. Lag = first poll that sees the marker minus its source commit time, corrected for the measured clock offset between the two servers (under 4 ms).
 5. After each run: wait until the endpoint COUNT(*) equals the source COUNT(*) (count convergence).
 6. Replication health: sys.dm_change_feed_log_scan_sessions (TOP 30, which covers the tail of run 7 plus runs 8 and 9) and sys.dm_change_feed_errors on the source, saved as raw/raw_dmvs.json.
@@ -45,7 +45,7 @@ Headline figures are the pooled ones (all 3 runs, 51 markers per rate). Slowest 
 * Count convergence after each burst: 88 s to 216 s.
 * Replication health (DMV sample of runs 7 to 9 only: 30 scan sessions, 21:36 to 21:49 Oslo): every scan session Done, error_count 0, rows_left_to_publish 0, sys.dm_change_feed_errors empty, sessions every 15 s with reported latency median 0 s, max 15 s.
 * Shape: new markers surface on the endpoint in 15 batches (distinct seen times clustered within 10 s), 150.8 s to 329.1 s apart, median 187.8 s. That produces the sawtooth on the right of the chart.
-* Where the time goes (results/delta_commits.csv, 102 commits, versions 0 to 101, read through the OneLake DFS API at `https://onelake.dfs.fabric.microsoft.com/<workspace-id>/<sql-database-id>/Tables/dbo/table_a/_delta_log/`, the mirrored Delta table of the SQL database item itself, no shortcut): during every burst the replicator committed to the mirrored Delta table every 12 to 16 s (median 15.0 s, 89 in-burst gaps, 11 to 12 commits per run). Each marker was in Delta 7.4 to 28.9 s after its source commit (median 18.5 s, p95 27.3 s). From Delta to visible on the endpoint took 2.8 to 278.6 s (median 116.3 s, p95 218.6 s), a median 86% of each marker's lag (median of per marker shares; in medians, 116 s of about 135 s). Each endpoint batch picked up 1 to 11 Delta commits at once (median 6.5). So the 150 to 330 s batching sits between the Delta table and the SQL analytics endpoint, not in replication.
+* Where the time goes (results/delta_commits.csv, 102 commits, versions 0 to 101, read through the OneLake DFS API at `https://onelake.dfs.fabric.microsoft.com/<workspace>/<item>/Tables/dbo/table_a/_delta_log/`, the mirrored Delta table of the SQL database item itself, no shortcut): during every burst the replicator committed a Merge to the mirrored Delta table every 14 to 16 s (median 15.0 s over 88 in-burst Merge to Merge gaps; the one 12 s gap follows an Optimize commit; 11 to 12 commits per run). Each marker was in Delta 7.4 to 28.9 s after its source commit (median 18.5 s, p95 27.3 s). From Delta to visible on the endpoint took 2.8 to 278.6 s (median 116.3 s, p95 218.6 s), a median 86% of each marker's lag (median of per marker shares; in medians, 116 s of about 135 s). Each endpoint batch picked up 1 to 11 Delta commits at once (median 6.5). So the 150 to 330 s batching sits between the Delta table and the SQL analytics endpoint, not in replication.
 * Which metadata sync the endpoint used: consistent with legacy sync, not confirmed. The DMV sys.dm_db_external_tables_log_status listed zero tables while the mirrored table was updating, and Learn says it reports sync details only for the new version (https://learn.microsoft.com/en-us/fabric/data-engineering/sql-analytics-endpoint-metadata-sync); a median of 116 s from Delta to the endpoint also fits legacy sync rather than the new sync's within seconds. Details in NOTES.md and results/sync_check.json.
 * Rate trend: in each of the 3 rounds the median fell from 10 to 100 to 1000 rows/s, but the order inside every round was always 10, 100, 1000 and each run's markers fall into only 1 to 3 batches, so treat it as an observation, not a cause.
 * CU: any CU in the mirroring window is harness cost (the endpoint polls, the notebook sessions and the SQL database workload), not replication cost. Mirroring a Fabric SQL database to OneLake has no compute cost ([Learn FAQ](https://learn.microsoft.com/en-us/fabric/database/sql/mirroring-faq#what-are-the-costs-associated-with-mirroring)). The Capacity Metrics model query returned no rows at report time; see NOTES.md.
@@ -56,13 +56,13 @@ All commands from the box, folder /workspace/demos/fabric-mirroring-lag.
 
 ```bash
 export PATH=/home/box/tools/azcli/bin:$PATH        # az login already done; tokens are fetched in scripts/ops.py, never printed
+cp scripts/env.example scripts/env.local            # fill in names and connection values (REST calls listed in scripts/env.sh)
+source scripts/env.sh                               # workspace, item and notebook names all come from env.local
 python3 scripts/build_notebooks.py                  # writes notebooks/*.ipynb
-python3 scripts/ops.py upsert mirror_seed notebooks/mirror_seed.ipynb
-python3 scripts/ops.py upsert mirror_workload notebooks/mirror_workload.ipynb
-cp scripts/env.example scripts/env.local            # fill in from the REST calls listed in scripts/env.sh
-source scripts/env.sh
-python3 scripts/ops.py run mirror_seed "{\"src_server\":[\"$SRC_SERVER\",\"string\"],\"src_db\":[\"$SRC_DB\",\"string\"],\"ep_server\":[\"$EP_SERVER\",\"string\"],\"job\":[\"seed\",\"string\"]}"
-python3 scripts/ops.py run mirror_workload "{\"src_server\":[\"$SRC_SERVER\",\"string\"],\"src_db\":[\"$SRC_DB\",\"string\"],\"ep_server\":[\"$EP_SERVER\",\"string\"],\"job\":[\"workload\",\"string\"]}"
+python3 scripts/ops.py upsert "$SEED_NOTEBOOK" notebooks/seed.ipynb
+python3 scripts/ops.py upsert "$WORKLOAD_NOTEBOOK" notebooks/workload.ipynb
+python3 scripts/ops.py run "$SEED_NOTEBOOK" "{\"src_server\":[\"$SRC_SERVER\",\"string\"],\"src_db\":[\"$SRC_DB\",\"string\"],\"ep_server\":[\"$EP_SERVER\",\"string\"],\"ep_db\":[\"$EP_DB\",\"string\"],\"job\":[\"seed\",\"string\"]}"
+python3 scripts/ops.py run "$WORKLOAD_NOTEBOOK" "{\"src_server\":[\"$SRC_SERVER\",\"string\"],\"src_db\":[\"$SRC_DB\",\"string\"],\"ep_server\":[\"$EP_SERVER\",\"string\"],\"ep_db\":[\"$EP_DB\",\"string\"],\"job\":[\"workload\",\"string\"]}"
 python3 scripts/ops.py status <Location URL printed by run>
 /workspace/.venv-mirror/bin/python scripts/make_results.py   # needs matplotlib (venv); --offline rebuilds from raw/
 python3 scripts/fetch_delta_log.py 2026-10-30T19:54 2026-10-30T20:54   # read only, about 100 small OneLake reads
@@ -78,7 +78,7 @@ scripts/film_run.sh 100 180     # rate rows/s, burst seconds; logs to Files/mirr
 python3 scripts/ops.py status "$(cat /tmp/film_loc)"
 ```
 
-Same code path as the measured runs (mirror_workload with rates=100, repeats=1, gap_s=0). The notebook session needs about 1 to 2 minutes to start. The job stops by itself after the burst plus the tail wait for the last marker.
+Same code path as the measured runs (the workload notebook with rates=100, repeats=1, gap_s=0). The notebook session needs about 1 to 2 minutes to start. The job stops by itself after the burst plus the tail wait for the last marker.
 
 ## Files
 
@@ -89,7 +89,7 @@ Same code path as the measured runs (mirror_workload with rates=100, repeats=1, 
 * results/lag_chart.png: per rate boxplot and per marker timeline.
 * raw/ (not in the repo): JSON logs exactly as written by the notebooks, the downloaded _delta_log files and the screen clips. Rebuild with make_results.py and fetch_delta_log.py.
 * NOTES.md: caveats. SHOTS.md: shot and clip list.
-* scripts/: ops.py (Fabric REST and OneLake helper), build_notebooks.py, nbutil.py, build_probe.py, metrics_dax.py, make_results.py, fetch_delta_log.py, delta_commits.py, film_run.sh, env.sh and env.example (copy to env.local, which is gitignored).
+* scripts/: ops.py (Fabric REST and OneLake helper), build_notebooks.py, nbutil.py, build_probe.py, metrics_dax.py, make_results.py, fetch_delta_log.py, delta_commits.py, film_run.sh, env.sh and env.example (copy to env.local, which is gitignored; every workspace, item and notebook name is read from it).
 
 ## lag_summary.csv
 results/lag_summary.csv has numeric median_s, p95_s, min_s, max_s and mean_s columns per rate, per run (scope single_run) and pooled over all 3 runs (scope all_runs_pooled, 51 markers). p95 is true nearest rank (ceil(0.95 n)), the same method as make_results.py, so pooled p95 is 276.4 / 244.0 / 212.0 s. Headline numbers in posts and videos use the pooled rows. results.csv keeps the fairness-brief columns unchanged.
