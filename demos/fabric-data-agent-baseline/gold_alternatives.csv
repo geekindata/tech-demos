@@ -1,0 +1,8 @@
+q_id,reading,sql,answer
+Q19,"gross, by order date","SELECT CAST(SUM(l.l_extendedprice) AS DECIMAL(18,2)) FROM orders o JOIN lineitem l ON l.l_orderkey = o.o_orderkey WHERE o.o_orderdate >= '1995-01-01' AND o.o_orderdate < '1996-01-01'",37013643233.47
+Q19,"net, by ship date","SELECT CAST(SUM(l.l_extendedprice * (1 - l.l_discount)) AS DECIMAL(18,2)) FROM lineitem l WHERE l.l_shipdate >= '1995-01-01' AND l.l_shipdate < '1996-01-01'",35150221274.34
+Q19,"gross, by ship date","SELECT CAST(SUM(l.l_extendedprice) AS DECIMAL(18,2)) FROM lineitem l WHERE l.l_shipdate >= '1995-01-01' AND l.l_shipdate < '1996-01-01'",36998930658.43
+Q19,"net incl. tax, by order date","SELECT CAST(SUM(l.l_extendedprice * (1 - l.l_discount) * (1 + l.l_tax)) AS DECIMAL(18,2)) FROM orders o JOIN lineitem l ON l.l_orderkey = o.o_orderkey WHERE o.o_orderdate >= '1995-01-01' AND o.o_orderdate < '1996-01-01'",36571255416.91
+Q20,most orders,"SELECT c.c_name, COUNT(*) n FROM customer c JOIN orders o ON o.o_custkey = c.c_custkey GROUP BY c.c_name ORDER BY n DESC, c.c_name LIMIT 3","c_name=Customer#000147081, n=26; c_name=Customer#000023424, n=25; c_name=Customer#000082175, n=25"
+Q20,gross revenue,"SELECT c.c_name, CAST(SUM(l.l_extendedprice) AS DECIMAL(18,2)) r FROM customer c JOIN orders o ON o.o_custkey = c.c_custkey JOIN lineitem l ON l.l_orderkey = o.o_orderkey GROUP BY c.c_name ORDER BY r DESC LIMIT 1","c_name=Customer#000023424, r=4815432.72"
+Q20,highest account balance,"SELECT c_name, c_acctbal FROM customer ORDER BY c_acctbal DESC LIMIT 3","c_name=Customer#000134833, c_acctbal=9999.95; c_name=Customer#000139093, c_acctbal=9999.93; c_name=Customer#000051922, c_acctbal=9999.60"
