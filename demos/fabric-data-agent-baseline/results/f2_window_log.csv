@@ -1,0 +1,7 @@
+utc,event,detail
+2026-10-30T20:54:19Z,resumed,state=Active
+2026-10-30T20:54:19Z,hardstop_armed,pid=718723 fires_in_min=115
+2026-10-30T20:54:29Z,assign_f2,202 
+2026-10-30T21:00:23Z,assign_trial,202  via=manual
+2026-10-30T21:01:22Z,suspended,state=Paused
+2026-10-30T21:01:24Z,hardstop_disarmed,pid=718723
