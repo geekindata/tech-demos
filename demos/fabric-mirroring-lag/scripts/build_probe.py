@@ -2,7 +2,8 @@ import sys, pathlib; sys.path.insert(0, str(pathlib.Path(__file__).parent)); imp
 P = '''src_server = ""
 src_db = ""
 ep_server = ""
-ep_db = "source_db"
+ep_db = ""
+files_root = ""   # abfss://<workspace>@onelake.dfs.fabric.microsoft.com/<lakehouse>.Lakehouse/Files
 '''
 C = '''import json, struct, datetime, traceback, os, sys
 out = {"py": sys.version}
@@ -15,7 +16,7 @@ def save():
             out["save_err"] = str(e)
     try:
         import notebookutils
-        notebookutils.fs.put("abfss://<workspace>@onelake.dfs.fabric.microsoft.com/<lakehouse>.Lakehouse/Files/mirror_lag/probe2.json", txt, True)
+        notebookutils.fs.put(files_root + "/mirror_lag/probe2.json", txt, True)
     except Exception as e:
         out["put_err"] = str(e)
 try:

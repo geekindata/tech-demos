@@ -1,15 +1,15 @@
 """Build the Fabric Python notebooks for the mirroring lag test (no secrets inside).
-seed.ipynb     : create dbo.table_a, seed 1,000,000 rows, time the initial snapshot to the SQL analytics endpoint
-workload.ipynb : seeded insert/update/delete bursts at given rates with heartbeat markers, poll the endpoint, log lag
-cold_probe.ipynb     : single markers after a long idle gap (cold probes)"""
+seed.ipynb       : create dbo.table_a, seed 1,000,000 rows, time the initial snapshot to the SQL analytics endpoint
+workload.ipynb   : seeded insert/update/delete bursts at given rates with heartbeat markers, poll the endpoint, log lag
+cold_probe.ipynb : single markers after a long idle gap (cold probes)"""
 import sys, pathlib; sys.path.insert(0, str(pathlib.Path(__file__).parent)); import nbutil
 NB = pathlib.Path(__file__).resolve().parent.parent / 'notebooks'
 
 PARAMS = '''# Parameters (overridden by the RunNotebook job)
-src_server = ""      # serverFqdn of source_db (from GET /sqlDatabases)
-src_db = ""          # databaseName of source_db
+src_server = ""      # serverFqdn of the source SQL database (from GET /sqlDatabases)
+src_db = ""          # databaseName of the source SQL database
 ep_server = ""       # SQL analytics endpoint host (GET /sqlEndpoints/{id}/connectionString)
-ep_db = "source_db"
+ep_db = ""           # SQL analytics endpoint database name (the SQL database display name)
 seed = 42
 job = "workload"
 rates = "10,100,1000"   # rows/s, run order is interleaved per repeat

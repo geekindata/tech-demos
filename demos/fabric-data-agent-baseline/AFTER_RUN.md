@@ -11,7 +11,7 @@ whether cost figures or the capacity name are published.
 3. Keep identical:
    - the 20 questions, byte for byte and in the same order
    - no instructions and no example queries
-   - the same 7 tables and the same `agent_lakehouse` snapshot (lineitem 5,994,514 rows; sum of l_extendedprice
+   - the same 7 tables and the same agent lakehouse snapshot (lineitem 5,994,514 rows; sum of l_extendedprice
      229300179105.02)
    - the runtime (standard), with no republish
    - `FabricOpenAIResponses` with a new conversation per question

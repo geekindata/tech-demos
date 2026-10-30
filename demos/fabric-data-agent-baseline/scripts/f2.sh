@@ -6,6 +6,7 @@ set -uo pipefail
 A=/home/box/tools/azcli/bin/az
 D=$(cd "$(dirname "$0")/.." && pwd)
 S=$D/scripts
+[ -f $S/env.local ] && { set -a; . $S/env.local; set +a; }   # gitignored, see env.example
 F2_ARM=${F2_ARM:?set F2_ARM to the F2 capacity ARM resource path}
 WS=${AGENT_WS_ID:-$(cat $D/scripts/agent_ws_id)}
 LOG=$D/results/f2_window_log.csv
