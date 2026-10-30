@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "VariableLibrary",
+    "displayName": "demo_vl",
+    "description": "Two variables for the branch workspace demo"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9bec83f9-7b87-a92b-40c1-f5f3cf743310"
+  }
+}
