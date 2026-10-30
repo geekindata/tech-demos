@@ -30,12 +30,13 @@ Grain in the table comment, a comment per column, and declared PK/FK plus a join
 ## Gotchas and limitations
 - PK/FK in Unity Catalog are informational (not enforced). Key columns must be `NOT NULL`.
 - The FK means `dim_a` can't be dropped first. The script drops `fact_a` first.
-- Genie UI names for joins and sample questions differ between doc versions (Configure → Joins vs Configure → Examples → Add → Joins).
+- The join was declared through the API (`instructions.join_specs` in `serialized_space`). The docs' UI joins editor (Configure → Joins or Examples → Add → Joins) was not visible in demo-dbx2, so the join is not shown in the space UI.
 - Join relationships and table descriptions count toward the space's 200 knowledge-store snippets; sample SQL toward 100 instructions.
 
 ## Visual moments
 - p13-01: Catalog Explorer, `fact_a` Overview: grain comment, column comments, PK/FK markers.
-- p13-02: `demo13_space` Configure: two tables and the one declared join.
+- p13-02a to p13-02c: `demo13_space`: the two tables and their keys inside the space.
+- p13-02d: Catalog Explorer ERD for `fact_a`: the declared PK/FK the join follows.
 - p13-03: answer to "What is the total value for attribute_a a1?" with Show code expanded, the JOIN on `segment_id` visible.
 
 ## Settled in demo-dbx2
