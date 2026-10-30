@@ -2,7 +2,7 @@
 
 Kit built 30 Oct 2026 for the Fabric preview feature *file data ingestion with materialized lake views* (`USING OneLake_Files`).
 
-Tested in Fabric demo_ws on <date>
+Tested in Fabric demo_ws on 30 October 2026 (Fabric trial capacity)
 
 The SQL follows the Microsoft Learn MLV docs and the Fabric blog as read on 30 Oct 2026. The numbers below come from a local DuckDB emulation (`scripts/expected_outputs.py` for the full kit, the same logic for the quick run). Compare them with the live results.
 

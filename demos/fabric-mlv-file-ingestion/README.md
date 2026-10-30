@@ -11,7 +11,7 @@ Built 30 Oct 2026 against these sources (read that day):
 - [Spark SQL reference for MLVs](https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/create-materialized-lake-view) (incl. *Ingest files with `USING OneLake_Files`*)
 - [Get started](https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/get-started-with-materialized-lake-views) · [Data quality](https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/data-quality) · [Refresh](https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/refresh-materialized-lake-view) · [Schedule / ad-hoc run](https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/schedule-lineage-run) · [Lineage](https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/view-lineage)
 
-Tested in Fabric demo_ws on <date>
+Tested in Fabric demo_ws on 30 October 2026 (Fabric trial capacity)
 
 The syntax is taken from the docs above, and the expected numbers come from a local DuckDB emulation. Read *Doc uncertainties* before a live demo.
 
