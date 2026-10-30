@@ -1,0 +1,30 @@
+name: notebook-outputs
+
+on:
+  pull_request:
+  push:
+    branches: [main, dev]
+
+jobs:
+  no-ipynb-outputs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fail if any .ipynb has outputs or execution counts
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, sys
+          bad = []
+          for p in pathlib.Path(".").rglob("*.ipynb"):
+              if ".ipynb_checkpoints" in p.parts:
+                  continue
+              nb = json.loads(p.read_text(encoding="utf-8"))
+              for i, c in enumerate(nb.get("cells", [])):
+                  if c.get("cell_type") == "code" and (c.get("outputs") or c.get("execution_count") is not None):
+                      bad.append(f"{p}: cell {i}")
+          if bad:
+              print("Notebooks with outputs (clear them, or use nbstripout):")
+              print("\n".join(bad))
+              sys.exit(1)
+          print("No notebook outputs found.")
+          PY

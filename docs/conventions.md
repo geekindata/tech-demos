@@ -8,7 +8,7 @@ Each demo lives in `demos/<slug>/`. The slug is short, lowercase and hyphenated,
 demos/<slug>/
   README.md      what it shows, prerequisites, how to run, cost and cleanup
   NOTES.md       technical notes and verified numbers (say where each was verified)
-  fabric/        Git-synced Fabric items for this demo's workspace only
+  fabric/        Fabric items for this demo's workspace only (Git-synced items, or notebook source to paste)
   databricks/    databricks.yml, resources/, src/
   data/          small sample CSVs only
   screenshots/   cropped, anonymised PNGs, with a README.md caption per file
@@ -41,3 +41,7 @@ Screenshots are cropped to the relevant panel and have names, emails, IDs and UR
 ## Pull requests
 
 Work on `dev`, then open a PR to `main`. The PR template checklist applies to every PR.
+
+## Notebooks
+
+Commit `.ipynb` files with outputs cleared. CI (`.github/workflows/notebook-outputs.yml`) fails a PR if any notebook has outputs or execution counts. To strip them automatically on commit: `pip install nbstripout && nbstripout --install` in your clone.

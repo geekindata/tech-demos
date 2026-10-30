@@ -1,0 +1,55 @@
+# Databricks Asset Bundle for the post 51 scratch objects.
+# No host is stored here. Authenticate with a CLI profile:
+#   databricks bundle validate -t dev --profile <your-profile>
+# or set DATABRICKS_HOST / DATABRICKS_CONFIG_PROFILE in your shell.
+#
+# Compute: both jobs use notebook tasks with no cluster settings, which run on
+# serverless jobs compute. An `environments` block / `environment_key` is not
+# used because the Jobs API only accepts environment_key on Python script,
+# Python wheel and dbt tasks, not on notebook tasks.
+bundle:
+  name: fabric-databricks-post51
+
+variables:
+  catalog:
+    description: Catalog that holds the demo schema
+    default: workspace
+  schema:
+    description: Schema for dim_table and gold_table
+    default: demo_schema
+  experiment_name:
+    description: MLflow experiment path for demo_mlflow (empty = the notebook's own experiment)
+    default: /Users/${workspace.current_user.userName}/demo_experiment
+
+resources:
+  jobs:
+    demo_gold_job:
+      name: demo_gold_job
+      tasks:
+        - task_key: seed_dim
+          notebook_task:
+            notebook_path: ./src/demo_seed_notebook.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+        - task_key: write_gold
+          depends_on:
+            - task_key: seed_dim
+          notebook_task:
+            notebook_path: ./src/demo_gold_notebook.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+    demo_mlflow_job:
+      name: demo_mlflow_job
+      tasks:
+        - task_key: log_runs
+          notebook_task:
+            notebook_path: ./src/demo_mlflow.py
+            base_parameters:
+              experiment_name: ${var.experiment_name}
+
+targets:
+  dev:
+    mode: development
+    default: true

@@ -1,0 +1,35 @@
+# Databricks Asset Bundle: the same job deployed to a dev and a prod target.
+# No host is stored here. Authenticate with a CLI profile:
+#   databricks bundle deploy -t dev --profile <your-profile>
+# or set DATABRICKS_HOST / DATABRICKS_CONFIG_PROFILE in your shell.
+bundle:
+  name: dabs-dev-vs-prod
+
+include:
+  - resources/*.yml
+
+variables:
+  catalog:
+    description: Catalog the notebook reports on (passed as a parameter, not read)
+    default: main
+  schema:
+    description: Schema the notebook reports on
+    default: demo_schema
+
+targets:
+  dev:
+    # Development mode prefixes resource names with "[dev <user>]" and pauses
+    # every schedule and trigger, so a dev deploy never runs on its own.
+    mode: development
+    default: true
+
+  prod:
+    # Production mode keeps names and schedules exactly as configured.
+    mode: production
+    workspace:
+      root_path: /Workspace/Shared/.bundle/demo/${bundle.name}/${bundle.target}
+    permissions:
+      - level: CAN_MANAGE
+        user_name: ${workspace.current_user.userName}
+    run_as:
+      user_name: ${workspace.current_user.userName}
