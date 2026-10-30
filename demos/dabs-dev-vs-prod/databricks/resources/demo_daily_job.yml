@@ -2,9 +2,9 @@ resources:
   jobs:
     demo_daily_job:
       name: demo_daily_job
-      # Quartz cron: 03:00 on 1 January only. The schedule is UNPAUSED in config so
-      # prod shows an active schedule, but it will not fire before the demo is cleaned up.
-      # Dev mode pauses it automatically.
+      # Quartz cron: 03:00 on 1 January only, so it will not fire during a demo.
+      # Note: dev mode did NOT pause an explicit UNPAUSED schedule when tested (Oct 2026).
+      # Set PAUSED here (or per target) if you do not want either copy scheduled.
       schedule:
         quartz_cron_expression: "0 0 3 1 1 ?"
         timezone_id: Europe/Oslo
@@ -12,6 +12,8 @@ resources:
       tasks:
         - task_key: hello
           # No cluster settings: a notebook task with no compute runs on serverless jobs compute.
+          # If your workspace has serverless for workflows disabled, add
+          # existing_cluster_id: <your cluster id> to this task.
           notebook_task:
             notebook_path: ../src/hello_notebook.py
             base_parameters:
