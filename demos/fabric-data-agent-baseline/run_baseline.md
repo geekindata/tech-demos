@@ -14,12 +14,12 @@ Never print tokens. No tenant setting changes. If anything shows a tenant settin
 `./f2.sh back`, report.
 
 ## Fixed inputs
-- Workspace `agent_workspace` (id in `AGENT_WS_ID` or the gitignored `scripts/agent_ws_id`), on the trial until the window. Lakehouse `agent_lakehouse`
+- The agent workspace (id in `AGENT_WS_ID` in the gitignored `scripts/env.local`), on the trial until the window. The agent lakehouse (`AGENT_LAKEHOUSE`)
   with the 7 SF1 tables (region, nation, supplier, customer, part, orders, lineitem), a file level copy of
   the SF1 tables of a lab lakehouse in a trial workspace (lineitem 5,994,514 rows, sum l_extendedprice 229300179105.02).
 - `questions.csv`: 20 questions, gold computed with DuckDB on the same Delta snapshot. `gold_alternatives.csv`:
   the other readings of the two ambiguous questions (Q19, Q20).
-- Agent: `data_agent`, the 7 tables, no instructions, preview runtime left at its default (record it).
+- Agent: the data agent (`DATA_AGENT_NAME`), the 7 tables, no instructions, preview runtime left at its default (record it).
 
 ## Minute by minute
 | T (min) | Oslo | Step | Command / check | Abort if |
@@ -30,7 +30,7 @@ Never print tokens. No tenant setting changes. If anything shows a tenant settin
 | 0 | 10:00 | Resume | `F2_NAME=<capacity name> F2_ARM=<ARM path> F2_WINDOW_OK=2026-10-30 ./f2.sh resume` (waits for Active, arms the 115 min hard stop) | resume fails: stop, report |
 | 1 | 10:01 | Hard stop armed? | `./f2.sh hardstop_status` -> armed. Note the deadline: resume UTC + 100 min = `DEADLINE` for ask.py | not armed: `./f2.sh hardstop_arm` |
 | 2 | 10:02 | Move workspace | `./f2.sh to_f2` -> 202/200, capacity = the F2 | assign fails twice: `./f2.sh back`, stop |
-| 4 | 10:04 | Gold cross check (optional) | `python3 verify_gold_sql.py` (T-SQL gold on the agent_lakehouse SQL endpoint, a few seconds of SQL CU on F2). On Oct 30 the box driver failed with "Protocol error in TDS stream" for every endpoint, so skip after one try | none |
+| 4 | 10:04 | Gold cross check (optional) | `python3 verify_gold_sql.py` (T-SQL gold on the SQL analytics endpoint of the agent lakehouse, a few seconds of SQL CU on F2). On Oct 30 the box driver failed with "Protocol error in TDS stream" for every endpoint, so skip after one try | none |
 | 6 | 10:06 | Create agent | `$PY create_agent.py` -> created, 7 tables selected, published; writes `raw/agent_setup.json` (settings, runtime flags) | "tenant" or "disabled" or 403 on create: stop, `./f2.sh back`, report. Tables not selected: tick them in the portal (fallback A steps 2 and 4), then publish there |
 | 10 | 10:10 | Record runtime | from `raw/agent_setup.json`: `experimental` flags (preview runtime = agentic NL2SQL path), date, model from the first response. Also open the agent in the portal once and note any runtime/version label | none |
 | 12 | 10:12 | Pilot: 5 requests | `$PY ask.py --runs 1 --only Q01,Q06,Q11,Q17,Q19 --cu-budget $BUDGET_CU --deadline-utc $DEADLINE` | errors on all 5: try `--mode mcp --only Q01`; if that fails too, portal fallback B |
@@ -58,13 +58,13 @@ notes, answer, generated_sql, correct, runtime_version, plus q_id, input_tokens,
 - AI Query is background, smoothed over 24 h; pausing bills the rest of the smoothed usage at once.
 
 ## Fallback A: portal, create the agent
-1. Fabric portal, workspace agent_workspace (must show F2 capacity), New item, Data agent, name data_agent.
-2. Add data, OneLake catalog, agent_lakehouse, tick region, nation, supplier, customer, part, orders, lineitem.
+1. Fabric portal, the agent workspace (must show F2 capacity), New item, Data agent, name it as in `DATA_AGENT_NAME`.
+2. Add data, OneLake catalog, the agent lakehouse, tick region, nation, supplier, customer, part, orders, lineitem.
 3. Leave Agent instructions and data source instructions empty. Do not add example queries.
 4. Publish, description "Baseline, no instructions". Note any runtime/version label shown in settings.
 
 ## Fallback B: portal, ask the questions
-1. Open data_agent, start a new chat for every request (New chat button), paste the question text.
+1. Open the data agent, start a new chat for every request (New chat button), paste the question text.
 2. Time with a stopwatch from send to final answer (duration_s). Expand the steps to copy the generated SQL.
 3. Fill results.csv by hand: variant `portal_no_instructions`, cu_s empty (read later from the Metrics app,
    item kind LlmPlugin, operation "AI Query"), runtime_version from the agent settings.

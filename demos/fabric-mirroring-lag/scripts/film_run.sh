@@ -6,8 +6,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 source ./env.sh
 RATE="${1:-100}"; RUN_S="${2:-180}"; JOB="film_$(date -u +%Y%m%dT%H%M%S)"
-PARAMS=$(python3 -c "import json,sys; a=sys.argv; print(json.dumps(dict(src_server=[a[1],'string'],src_db=[a[2],'string'],ep_server=[a[3],'string'],ep_db=['source_db','string'],job=[a[4],'string'],rates=[a[5],'string'],repeats=[1,'int'],run_s=[int(a[6]),'int'],gap_s=[0,'int'])))" "$SRC_SERVER" "$SRC_DB" "$EP_SERVER" "$JOB" "$RATE" "$RUN_S")
-LOC=$(python3 ops.py run workload "$PARAMS" | tail -n 1)
+PARAMS=$(python3 -c "import json,sys; a=sys.argv; print(json.dumps(dict(src_server=[a[1],'string'],src_db=[a[2],'string'],ep_server=[a[3],'string'],ep_db=[a[7],'string'],job=[a[4],'string'],rates=[a[5],'string'],repeats=[1,'int'],run_s=[int(a[6]),'int'],gap_s=[0,'int'])))" "$SRC_SERVER" "$SRC_DB" "$EP_SERVER" "$JOB" "$RATE" "$RUN_S" "$EP_DB")
+LOC=$(python3 ops.py run "$WORKLOAD_NOTEBOOK" "$PARAMS" | tail -n 1)
 echo "$LOC" > /tmp/film_loc
 echo "job=$JOB location=$LOC"
 echo "Notebook session start takes about 1 to 2 minutes before the first rows land; job status may read NotStarted meanwhile."

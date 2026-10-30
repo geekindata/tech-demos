@@ -2,7 +2,20 @@
 Token comes from the Azure CLI and is never printed."""
 import sys, json, base64, time, subprocess, urllib.request, urllib.error, os
 AZ = os.environ.get('AZ_BIN', '/home/box/tools/azcli/bin/az')
-WS_NAME = 'trial_workspace'; LH_NAME = 'helper_lakehouse'
+def _load_env_local():
+    # Fill os.environ from scripts/env.local (gitignored) for anything not already set.
+    f = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'env.local')
+    if os.path.exists(f):
+        for line in open(f):
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                k, v = line.split('=', 1); os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+_load_env_local()
+def env(name):
+    v = os.environ.get(name)
+    if not v: sys.exit(f'set {name} in scripts/env.local or the environment (see scripts/env.example)')
+    return v
+WS_NAME = os.environ.get('FABRIC_WORKSPACE', ''); LH_NAME = os.environ.get('HELPER_LAKEHOUSE', '')
 _T = {}
 def tok(res='https://api.fabric.microsoft.com'):
     if res not in _T:
@@ -23,12 +36,12 @@ def call(method, path, body=None):
         except Exception: j = t
         return e.code, j, dict(e.headers)
 def ws():
-    s, j, _ = call('GET', '/workspaces'); return [w for w in j['value'] if w['displayName'] == WS_NAME][0]['id']
+    env('FABRIC_WORKSPACE'); s, j, _ = call('GET', '/workspaces'); return [w for w in j['value'] if w['displayName'] == WS_NAME][0]['id']
 def item(typ, name):
     s, j, _ = call('GET', f'/workspaces/{ws()}/items?type={typ}')
     m = [x for x in j['value'] if x['displayName'] == name]; return m[0]['id'] if m else None
 def upsert(name, path):
-    nb = json.load(open(path)); W = ws(); L = item('Lakehouse', LH_NAME)
+    nb = json.load(open(path)); W = ws(); L = item('Lakehouse', env('HELPER_LAKEHOUSE'))
     nb['metadata'].setdefault('dependencies', {})['lakehouse'] = {'default_lakehouse': L, 'default_lakehouse_name': LH_NAME, 'default_lakehouse_workspace_id': W}
     d = {'format': 'ipynb', 'parts': [{'path': 'notebook-content.ipynb', 'payload': base64.b64encode(json.dumps(nb).encode()).decode(), 'payloadType': 'InlineBase64'}]}
     i = item('Notebook', name)
@@ -46,7 +59,7 @@ def run(name, params):
     s, j, h = call('POST', f'/workspaces/{W}/items/{i}/jobs/instances?jobType=RunNotebook', body)
     print('run', s, j if s >= 400 else ''); return h.get('Location')
 def get_file(rel):
-    url = f'https://onelake.dfs.fabric.microsoft.com/{WS_NAME}/{LH_NAME}.Lakehouse/Files/{rel}'
+    url = f"https://onelake.dfs.fabric.microsoft.com/{env('FABRIC_WORKSPACE')}/{env('HELPER_LAKEHOUSE')}.Lakehouse/Files/{rel}"
     r = urllib.request.Request(url, headers={'Authorization': 'Bearer ' + tok('https://storage.azure.com'), 'x-ms-version': '2023-11-03'})
     return urllib.request.urlopen(r).read().decode()
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-"""Create data_agent in agent_workspace with the 7 agent_lakehouse tables, NO instructions, preview runtime left at default; publish.
+"""Create the data agent (DATA_AGENT_NAME) in the agent workspace with the 7 tables of the agent lakehouse (AGENT_LAKEHOUSE), NO instructions, preview runtime left at default; publish.
 Refuses unless the workspace is on the active F2. Writes raw/agent_setup.json (settings, datasource elements) for the runtime record."""
 import json, sys, time
 from common import *

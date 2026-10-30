@@ -1,7 +1,7 @@
 """Read CU-s per item kind and item for one capacity and date from the Capacity Metrics semantic model (read-only).
 Usage: metrics_cu.py <capacity_id> <yyyy-mm-dd>   Token from the Azure CLI, never printed."""
 import json, os, subprocess, sys, urllib.request, urllib.error
-AZ = '/home/box/tools/azcli/bin/az'; DS = os.environ['METRICS_MODEL_ID']   # Capacity Metrics semantic model id, set locally
+AZ = '/home/box/tools/azcli/bin/az'; from envcfg import env; DS = env('METRICS_MODEL_ID')   # Capacity Metrics semantic model id, set locally
 def tok():
     return subprocess.run([AZ, 'account', 'get-access-token', '--resource', 'https://analysis.windows.net/powerbi/api',
                            '--query', 'accessToken', '-o', 'tsv'], capture_output=True, text=True, check=True).stdout.strip()

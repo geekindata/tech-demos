@@ -1,10 +1,11 @@
-"""Upload the local SF1 Delta snapshot (current files plus _delta_log) to <workspace>/<lakehouse>/Tables/<table>."""
+"""Upload the local SF1 Delta snapshot (current files plus _delta_log) to <workspace>/<lakehouse>/Tables/<table> (names from scripts/env.local)."""
 import os, sys, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).parent)); import onelake
+from envcfg import env
 from deltalake import DeltaTable
 from local_db import TABLES
 here = pathlib.Path(__file__).resolve().parent.parent
-ws = open(here / 'scripts/agent_ws_id').read().strip(); lh = onelake.lh_id(ws, 'agent_lakehouse')
+ws = env('AGENT_WS_ID'); lh = onelake.lh_id(ws, env('AGENT_LAKEHOUSE'))
 tot = 0
 for t in TABLES:
     src = here / 'data' / f'{t}_sf1'
