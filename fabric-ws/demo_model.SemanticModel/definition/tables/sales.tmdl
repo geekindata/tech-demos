@@ -1,0 +1,20 @@
+/// Five synthetic rows for the branch demo.
+table sales
+
+	measure 'Total Amount' = SUM(sales[Amount])
+		formatString: #,0
+
+	column Region
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Region
+
+	column Amount
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: Amount
+
+	partition sales = m
+		mode: import
+		source = #table(type table [Region = text, Amount = Int64.Type], {{"North", 120}, {"South", 95}, {"East", 140}, {"West", 80}, {"Central", 65}})
+

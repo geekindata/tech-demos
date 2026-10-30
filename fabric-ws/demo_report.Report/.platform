@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "demo_report",
+    "description": "One card report on demo_model"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "3a2b60a7-681c-92b3-447e-c09a1445d068"
+  }
+}
