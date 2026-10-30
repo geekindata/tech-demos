@@ -24,13 +24,13 @@ def _db():
     con = duckdb.connect()
     con.execute("CREATE TABLE dim_a (segment_id INT PRIMARY KEY, segment VARCHAR, attribute_a VARCHAR)")
     con.execute("CREATE TABLE fact_a (id INT PRIMARY KEY, segment_id INT REFERENCES dim_a (segment_id), value DECIMAL(10,2))")
-    for table, cols, vals in re.findall(r"INSERT INTO demo_dbx\.demo13\.(\w+) \((.*?)\) VALUES(.*?);", SQL, re.S):
+    for table, cols, vals in re.findall(r"INSERT INTO demo13\.(\w+) \((.*?)\) VALUES(.*?);", SQL, re.S):
         con.execute(f"INSERT INTO {table} ({cols}) VALUES {vals}")
     return con
 
 
 def test_parses():
-    assert len(sqlglot.parse(SQL, read="databricks")) == 9
+    assert len(sqlglot.parse(SQL, read="databricks")) == 10
 
 
 def test_final_join():
