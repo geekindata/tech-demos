@@ -1,0 +1,27 @@
+# tech-demos
+
+Runnable demos behind GeekInData posts: Microsoft Fabric, Azure Databricks and Databricks Free Edition.
+Each demo is self-contained under `demos/<slug>/` and states what it costs and how to clean it up.
+
+## Demo index
+
+| Slug | Platform | Description | Date |
+|---|---|---|---|
+| _No demos on `main` yet. New demos arrive through a PR from `dev`._ | | | |
+
+## How to use this repo
+
+1. Pick a demo from the index and open `demos/<slug>/README.md`. It lists what the demo shows, prerequisites, how to run it, and cost and cleanup.
+2. `NOTES.md` in the same folder holds technical notes and the numbers that were verified (and where, for example locally or in Fabric).
+3. Fabric items in `fabric/` are Git-synced items for that demo's workspace only. Connect a scratch workspace to the folder, or import the files.
+4. Databricks code in `databricks/` is an Asset Bundle: `databricks bundle validate -t dev` and `databricks bundle deploy -t dev`, using your own CLI profile. No host is stored in the repo.
+5. Always pause the Fabric capacity and stop or terminate Databricks compute after a run.
+
+Conventions for adding a demo are in [docs/conventions.md](docs/conventions.md).
+
+## Branch and PR flow
+
+- `main` is the published state. It only changes through a reviewed pull request.
+- `dev` is the working branch. New demos and edits land on `dev` first (or on a short-lived branch off `dev`).
+- Open a PR from `dev` to `main` when a demo is complete. The PR template checklist must be ticked: no secrets or IDs, README and NOTES updated, cost and cleanup stated.
+- After review, merge to `main` and add the demo's row to the index above.
