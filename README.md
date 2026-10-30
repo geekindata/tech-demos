@@ -7,6 +7,7 @@ Each demo is self-contained under `demos/<slug>/` and states what it costs and h
 
 | Slug | Platform | Description | Date |
 |---|---|---|---|
+| [genie-readiness](demos/genie-readiness/) | Azure Databricks | Fact and dimension with grain and column comments, PK/FK constraints and a Genie space with a declared join (post 13) | 2026-10-30 |
 | [fabric-mlv-file-ingestion](demos/fabric-mlv-file-ingestion/) | Microsoft Fabric | Files → bronze → silver → gold with materialized lake views (`USING OneLake_Files`, preview), generic `table_a` data, plus a self-contained notebook | 2026-10-30 |
 | [fabric-databricks-post51](demos/fabric-databricks-post51/) | Fabric + Azure Databricks | Scratch objects and screenshots for blog post 51, *Fabric or Databricks? How I Decide* | 2026-10-30 |
 
