@@ -1,0 +1,6 @@
+rec started 21:39:28
+stopped ~21:46, clean take starts ~21:42
+steps9-10 recording start 21:59:53
+steps9-10 stopped 22:04:10; step 9 compare 22:01, commit 22:02, step 10 commit 22:03
+22:05 PR #6 open (feature->fabric-demo-git), scan clean; next pBW-10 shot after mirroring filming, then merge, step12 --go
+steps12-14 rec stopped 22:19:35. conflict tabs 22:16, pBW-11 22:16:38, pBW-12 22:17:53, Merge And Update 22:18:12, synced 22:18:40, pBW-13 22:19:12. After update demo_report shows Uncommitted (Changes 1), left alone. Remote Total Amount fmt was #,0.0 (feature edit), local #,0.00; accepted incoming.

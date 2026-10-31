@@ -1,0 +1,8 @@
+main workspace: capacity: Trial (OK)
+  git  ConnectedAndInitialized fabric-demo-git
+  items ['Lakehouse:demo_git_lh', 'Notebook:demo_nb', 'Report:demo_report', 'SQLEndpoint:demo_git_lh', 'SemanticModel:demo_model', 'VariableLibrary:demo_vl']
+  workspaceRelations GET 200 [{'relationType': 'Branch'}]
+feature workspace: capacity: Trial (OK)
+  git  ConnectedAndInitialized fabric-demo-feature
+  items ['Report:demo_report', 'SemanticModel:demo_model', 'VariableLibrary:demo_vl']
+  workspaceRelations GET 200 [{'relationType': 'Base'}]
