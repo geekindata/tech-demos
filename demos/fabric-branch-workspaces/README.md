@@ -67,7 +67,7 @@ Times are Oslo time. All timings are from a single run on a Trial capacity and a
 
 ## Observations
 
-1. **No "selective branch" label.** The docs (branched-workspace.md, checked Oct 30, 2026) say the status bar reads "selective branch" after a selective branch out. In this run (Oct 30, 2026), the feature workspace status bar showed only the branch name (fabric-demo-feature) and the last sync time. The selection itself worked: the workspace held only demo_report and demo_model until Add more items.
+1. **Selective branch shows as an icon.** The status bar marks a selective branch with an icon next to the branch name (a branch with a pencil mark), matching Learn's screenshot. Learn's text says the status bar 'says selective branch', but in this run it was an icon, not a text label. The selection itself worked: the workspace held only demo_report and demo_model until Add more items.
 2. **File level commit is Preview, and it warns you.** The dialog reads: "Commit partial selection? (preview) Some items have only part of their files selected. Only the selected files will be committed. Committing part of an item's changes can leave its definition incomplete or invalid in Git. You may need to fix it manually before importing the item again. Unselected files stay as uncommitted changes in your workspace and won't be lost." It has Commit and Cancel buttons.
 3. **Conflict labels.** The conflict dialog is titled "Merge and update content to resolve conflicts". It offers "Accept incoming changes" and "Keep current content", has a checkbox to confirm the deletion warning, and has a "Merge And Update" button.
 4. **Three compare modes.** The compare dropdown in the conflict view offers "Last sync vs. remote", "Workspace vs Remote" and "Last sync vs. workspace".
