@@ -1,0 +1,82 @@
+{
+  "scanned_local": "2026-10-30 21:59 Oslo",
+  "items": [
+    {
+      "item": "demo_report",
+      "type": "Report",
+      "getDefinition": 200,
+      "parts": [
+        "definition.pbir",
+        "definition/version.json",
+        "definition/report.json",
+        "definition/pages/pages.json",
+        "definition/pages/overview/page.json",
+        "definition/pages/overview/visuals/total_card/visual.json",
+        ".platform"
+      ],
+      "findings": [
+        {
+          "part": "definition.pbir",
+          "line": 6,
+          "kind": "known id: item id of demo_model",
+          "value": "********-a506",
+          "context": "\"connectionString\": \"Data Source=powerbi://api.powerbi.com/v1.0/myorg/<workspace>;"
+        },
+        {
+          "part": ".platform",
+          "line": 10,
+          "kind": "logicalId",
+          "value": "********-0000",
+          "context": "\"logicalId\": \"<guid>\""
+        }
+      ],
+      "logicalId_equals_item_id": false,
+      "pbir_datasetReference": [
+        "byConnection"
+      ]
+    },
+    {
+      "item": "demo_model",
+      "type": "SemanticModel",
+      "getDefinition": 200,
+      "parts": [
+        "definition.pbism",
+        "definition/tables/sales.tmdl",
+        "definition/model.tmdl",
+        "definition/database.tmdl",
+        ".platform"
+      ],
+      "findings": [
+        {
+          "part": ".platform",
+          "line": 10,
+          "kind": "logicalId",
+          "value": "********-0000",
+          "context": "\"logicalId\": \"<guid>\""
+        }
+      ],
+      "logicalId_equals_item_id": false
+    },
+    {
+      "item": "demo_vl",
+      "type": "VariableLibrary",
+      "getDefinition": 200,
+      "parts": [
+        "variables.json",
+        "settings.json",
+        "valueSets/test.json",
+        ".platform"
+      ],
+      "findings": [
+        {
+          "part": ".platform",
+          "line": 10,
+          "kind": "logicalId",
+          "value": "********-0000",
+          "context": "\"logicalId\": \"<guid>\""
+        }
+      ],
+      "logicalId_equals_item_id": false
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+GUID scan of the feature workspace getDefinition exports, 2026-10-30 21:59 Oslo
+GUID values masked to last 4 chars. Raw exports stay on the box in defs/ (not for publishing).
+
+## demo_report (Report) getDefinition 200  parts: definition.pbir, definition/version.json, definition/report.json, definition/pages/pages.json, definition/pages/overview/page.json, definition/pages/overview/visuals/total_card/visual.json, .platform
+   counts: known id: item id of demo_model=1, logicalId=1
+   known id: item id of demo_model definition.pbir:6 ********-a506  | "connectionString": "Data Source=powerbi://api.powerbi.com/v1.0/myorg/<workspace>;
+   logicalId                  .platform:10 ********-0000  | "logicalId": "<guid>"
+   logicalId equals item id: False
+   definition.pbir datasetReference in workspace export: ['byConnection'] (byPath expected only in the committed Git copy, check after step 4)
+
+## demo_model (SemanticModel) getDefinition 200  parts: definition.pbism, definition/tables/sales.tmdl, definition/model.tmdl, definition/database.tmdl, .platform
+   counts: logicalId=1
+   logicalId                  .platform:10 ********-0000  | "logicalId": "<guid>"
+   logicalId equals item id: False
+
+## demo_vl (VariableLibrary) getDefinition 200  parts: variables.json, settings.json, valueSets/test.json, .platform
+   counts: logicalId=1
+   logicalId                  .platform:10 ********-0000  | "logicalId": "<guid>"
+   logicalId equals item id: False
+
+TOTAL by type: known id: item id of demo_model=1, logicalId=3
