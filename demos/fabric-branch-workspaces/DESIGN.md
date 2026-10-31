@@ -127,7 +127,7 @@ Naming follows the repo pattern, prefix pBW (post number to be assigned by Blog)
 | pBW-07-compare-side-by-side.png | Review and commit changes: TMDL diff with the new measure |
 | pBW-08-compare-inline.png | Same diff, inline mode |
 | pBW-09-file-level-commit.png | demo_vl with one of two files ticked, partial commit warning (Preview label visible) |
-| pBW-10-github-pr.png | GitHub PR fabric-demo-feature into fabric-demo-git, files changed view |
+| pBW-10-pr-files.png | GitHub PR fabric-demo-feature into fabric-demo-git, files changed view |
 | pBW-11-conflict-modes.png | The main workspace Updates tab conflict dialog with the 3 compare modes dropdown (optional, after the merge) |
 | pBW-12-updates-review.png | The main workspace Updates tab, Review changes before Update all |
 | pBW-13-contributor-branch-setting.png | Workspace settings, Git integration, Contributor branch switch setting and Branch workspaces tab |
