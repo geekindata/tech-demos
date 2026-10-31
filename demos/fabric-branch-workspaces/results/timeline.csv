@@ -1,0 +1,18 @@
+step,description,start_oslo,end_oslo,source
+0,Pre-flight read only: Trial capacity Active; the paid F2 capacity paused and not used,2026-10-30 21:30,2026-10-30 21:30,DESIGN.md build log
+1,Create demo_model (TMDL) demo_report (PBIR) demo_vl in the main workspace via REST,2026-10-30 21:31,2026-10-30 21:33,DESIGN.md build log; scripts/create_items.py
+2,Refresh demo_model (two refreshes, 21:54:04 and 21:57:26; deferred until no mirroring run was measuring),2026-10-30 21:54:04,2026-10-30 21:57:26,results/refresh_log.txt
+3,GUID scan of getDefinition exports (logicalIds, plus the model item ID in the byConnection definition.pbir export),2026-10-30 21:34,2026-10-30 21:35,results/guid_scan_main_ws.txt
+4,Baseline commit of 5 items to fabric-demo-git,2026-10-30 21:35:49,2026-10-30 21:36:17,git history; results/repo_scan_baseline.txt
+5,Branch out to a new feature workspace on new branch fabric-demo-feature with Select items individually (demo_report then Select related items),2026-10-30 21:42:40,2026-10-30 21:43:48,raw/session-steps5-7.mp4 (clean take; first attempt 21:41:48 to 21:42:36 aborted)
+6,Verify capacity Trial and workspace relations (Branch and Base); tree and Related branches,2026-10-30 21:44:00,2026-10-30 21:46:19,raw/session-steps5-7.mp4; results/step6_verify.txt
+7,Add more items: demo_vl then Update all (3 items synced),2026-10-30 21:45:10,2026-10-30 21:45:58,raw/session-steps5-7.mp4
+8,"Feature edits via REST: Total Amount format #,0 to #,0.0; add Avg Amount; card title; demo_vl env_label and row_limit",2026-10-30 21:58,2026-10-30 21:59:21,scripts/step8_10_feature_edits.py; results/guid_scan_feature_ws.txt
+9,Compare and commit: side by side then inline diff; commit Add Avg Amount measure,2026-10-30 22:01:00,2026-10-30 22:02:06,raw/session-steps9-10.mp4; git history
+10,File level commit (Preview) of demo_vl: commit only variables.json (Update env_label default); valueSets/test.json stays uncommitted,2026-10-30 22:02:26,2026-10-30 22:03:05,raw/session-steps9-10.mp4; git history
+11,PR #6 fabric-demo-feature into fabric-demo-git opened then merged,2026-10-30 22:05:00,2026-10-30 22:14:27,GitHub PR #6
+12,"Uncommitted conflicting edit in the main workspace: Total Amount format #,0 to #,0.00 (updateDefinition 200)",2026-10-30 22:14:50,2026-10-30 22:14:50,results/step12_log.txt
+12,Updates tab conflict and compare dialog with 3 compare modes,2026-10-30 22:15:50,2026-10-30 22:16:48,raw/session-steps12-14-recovered.mp4
+13,Change Review then Merge and update with Accept incoming changes; synced to merge commit,2026-10-30 22:17:02,2026-10-30 22:18:40,raw/session-steps12-14-recovered.mp4
+13,After update demo_report shows Uncommitted (Changes 1); left alone,2026-10-30 22:18:41,2026-10-30 22:18:41,raw/session-steps12-14-recovered.mp4
+14,Workspace settings Git integration: Git branch controls (preview) toggle Off and Branch workspaces tab (look only),2026-10-30 22:18:52,2026-10-30 22:19:35,raw/session-steps12-14-recovered.mp4; pBW-13

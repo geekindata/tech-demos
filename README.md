@@ -7,6 +7,7 @@ Each demo is self-contained under `demos/<slug>/` and states what it costs and h
 
 | Slug | Platform | Description | Date |
 |---|---|---|---|
+| [fabric-branch-workspaces](demos/fabric-branch-workspaces/) | Microsoft Fabric | Branch workspaces, selective branching, compare and commit and Update from Git, one run on a Trial capacity | 2026-10-30 |
 | [fabric-mirroring-lag](demos/fabric-mirroring-lag/) | Microsoft Fabric | Fabric SQL database mirroring lag to the SQL analytics endpoint at 10, 100 and 1,000 rows/s, with Delta commit timing (post 53) | 2026-10-30 |
 | [fabric-data-agent-baseline](demos/fabric-data-agent-baseline/) | Microsoft Fabric | Data agent baseline: 20 fixed questions over one lakehouse, accuracy, latency and CU before the Nov 2 to 10 NL2SQL update (n=1) | 2026-10-30 |
 | [fabric-variable-library-targets](demos/fabric-variable-library-targets/) | Microsoft Fabric | Variable Library with Test, Preprod and Prod value sets, read from a notebook (post 31) | 2026-10-30 |

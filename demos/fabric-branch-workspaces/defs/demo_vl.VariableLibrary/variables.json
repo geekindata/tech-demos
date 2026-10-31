@@ -1,0 +1,17 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/variableLibrary/definition/variables/1.0.0/schema.json",
+  "variables": [
+    {
+      "name": "env_label",
+      "note": "Label shown in the demo",
+      "type": "String",
+      "value": "dev2"
+    },
+    {
+      "name": "row_limit",
+      "note": "Rows the demo reads",
+      "type": "Integer",
+      "value": 5
+    }
+  ]
+}
